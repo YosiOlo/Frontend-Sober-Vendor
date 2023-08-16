@@ -1,8 +1,11 @@
-import React from 'react'
+import React from 'react';
+import TopBar from '../Components/TopBar/TopBar';
 
 function Revenue() {
   return (
-    <div>Revenue</div>
+    <div>
+      <TopBar title="Revenue"/>
+    </div>
   )
 }
 

@@ -1,8 +1,11 @@
-import React from 'react'
+import React from 'react';
+import TopBar from '../Components/TopBar/TopBar';
 
 function Chats() {
   return (
-    <div>Chats</div>
+    <div>
+      <TopBar title="Chats"/>
+    </div>
   )
 }
 

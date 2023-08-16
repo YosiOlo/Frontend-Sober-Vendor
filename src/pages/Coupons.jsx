@@ -1,8 +1,11 @@
-import React from 'react'
+import React from 'react';
+import TopBar from '../Components/TopBar/TopBar';
 
 function Coupons() {
   return (
-    <div>Coupons</div>
+    <div>
+      <TopBar title="Coupons"/>
+    </div>
   )
 }
 

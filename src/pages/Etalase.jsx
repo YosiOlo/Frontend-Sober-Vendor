@@ -1,8 +1,11 @@
-import React from 'react'
+import React from 'react';
+import TopBar from '../Components/TopBar/TopBar';
 
 function Etalase() {
   return (
-    <div>Etalase</div>
+    <div>
+      <TopBar title="Etalase"/>
+    </div>
   )
 }
 

@@ -1,8 +1,11 @@
-import React from 'react'
+import React from 'react';
+import TopBar from '../Components/TopBar/TopBar';
 
 function WIthdrawals() {
   return (
-    <div>WIthdrawals</div>
+    <div>
+      <TopBar title="Withdrawals"/>
+    </div>
   )
 }
 

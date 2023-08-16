@@ -1,5 +1,12 @@
-const Settings = () => {
-  return <h1>Settings</h1>;
-};
+import React from 'react';
+import TopBar from '../Components/TopBar/TopBar';
 
-export default Settings;
+function Settings() {
+  return (
+    <div>
+      <TopBar title="Settings"/>
+    </div>
+  )
+}
+
+export default Settings
