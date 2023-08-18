@@ -52,7 +52,7 @@ function ChartTwo() {
         </p>
       </div>
       <div className="flex">
-        <div className="basis-[30%]">
+        <div className="basis-[25%]">
           <PieChart width={400} height={400}>
             <Pie
               data={data}
