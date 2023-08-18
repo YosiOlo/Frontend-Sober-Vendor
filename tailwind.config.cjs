@@ -5,8 +5,8 @@ module.exports = {
     extend: {
       fontFamily: {
         Montserrat: "Montserrat",
-      },
+      },themes: false,
     },
   },
-  plugins: [require("tailwind-scrollbar")],
+  plugins: [require("daisyui")],
 };

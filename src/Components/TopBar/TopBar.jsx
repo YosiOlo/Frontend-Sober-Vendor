@@ -17,12 +17,12 @@ const TopBar = ({ title }) => {
   };
 
   return (
-    <div className="">
+    <div className="text-base-300">
         <div className="flex md:hidden justify-around">
             <img src="https://res.cloudinary.com/dap6ohre8/image/upload/v1692042539/roady/sob-logos-1_i6ship.png" className="w-[20%] h-[20%] ml-12" alt="" />
             <button><VscSignOut className="hover:text-yellow-400" size={25} /></button>
         </div>
-    <div className="sm:flex items-center justify-between p-3 hidden sm:block flex">
+    <div className="sm:flex items-center justify-between p-3 hidden sm:block flex text-base-300">
       <h1 className="text-xl font-bold">{title}</h1>
       <div className="flex items-center space-x-4 text-black">
         <div className="relative">
@@ -38,7 +38,7 @@ const TopBar = ({ title }) => {
         </div>
         <div className="changeLang text-[14px]">
           <div className="drop-down-header">
-            <select className=" p-2 text-black  border-none">
+            <select className=" p-2 text-black bg-[#F1F1F1] border-none">
               <option value="id hover:text-yellow-400">Bahasa: Indonesia</option>
 
               <option value="en hover:text-yellow-400">Bahasa: Inggris</option>

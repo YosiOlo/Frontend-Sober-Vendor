@@ -72,7 +72,7 @@ const Sidebar = () => {
       };
 
   return (
-    <div className="flex">
+    <div className="sidebar-container flex text-base-300 h-full ">
       <div
         onClick={() => setOpen(false)}
         className={`md:hidden fixed inset-0 max-h-screen z-[998] bg-black/50 ${

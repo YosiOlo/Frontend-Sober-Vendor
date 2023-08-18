@@ -14,8 +14,8 @@ import {
   TextField,
 } from "@mui/material";
 import { MdOutlineArrowDropDown } from "react-icons/md";
-import { TbFileExport, TbReload } from 'react-icons/tb';
-import { FaFileCsv } from 'react-icons/fa';
+import { TbFileExport, TbReload } from "react-icons/tb";
+import { FaFileCsv } from "react-icons/fa";
 import { ArrowUpward, ArrowDownward, Search } from "@mui/icons-material";
 
 const TableOrders = (props) => {
@@ -23,12 +23,48 @@ const TableOrders = (props) => {
   const [orderBy, setOrderBy] = useState("");
   const [order, setOrder] = useState("asc");
   const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(5);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
   const [searchTerm, setSearchTerm] = useState("");
   const [exportOpen, setexportOpen] = useState(false);
 
   const toggleExport = () => {
     setexportOpen(!exportOpen);
+  };
+  const getPaymentStatus = (PaymentStatus) => {
+    if (PaymentStatus === "Completed")
+      return (
+        <div className="card rounded-md bg-green-400 text-center text-xs font-semibold">
+          {PaymentStatus}
+        </div>
+      );
+    if (PaymentStatus === "Pending")
+      return (
+        <div className="card rounded-md bg-yellow-400 text-center text-xs font-semibold">
+          {PaymentStatus}
+        </div>
+      );
+    else return <div className="badge badge-ghost">{PaymentStatus}</div>;
+  };
+  const getStatus = (Status) => {
+    if (Status === "Completed")
+      return (
+        <div className="card rounded-md bg-green-400 text-center text-xs font-semibold">
+          {Status}
+        </div>
+      );
+    if (Status === "Processed")
+      return (
+        <div className="card rounded-md bg-blue-400 text-center text-xs font-semibold">
+          {Status}
+        </div>
+      );
+    if (Status === "Pending")
+      return (
+        <div className="card rounded-md bg-yellow-400 text-center text-xs font-semibold">
+          {Status}
+        </div>
+      );
+    else return <div className="badge badge-ghost">{PaymentStatus}</div>;
   };
 
   const handleSort = (property) => {
@@ -72,7 +108,7 @@ const TableOrders = (props) => {
 
   return (
     <Card className="mt-5 w-full">
-      <div className=" p-2 flex justify-between">
+      <div className="p-2 flex flex-col md:flex-row justify-between">
         <TextField
           label="Search"
           variant="outlined"
@@ -84,156 +120,191 @@ const TableOrders = (props) => {
             endAdornment: <Search />,
           }}
         />
-        <div className="action flex space-x-3 font-semibold text-[12px] text-white">
+        <div className="action flex flex-col md:flex-row space-x-0 md:space-x-3 font-semibold text-[12px] ">
           <div className="relative">
             <button
               className="flex px-4 py-2 bg-[#36C6D3] rounded-lg"
               onClick={toggleExport}
             >
-              <TbFileExport className="mr-1 mt-[2px]" />
-              Export <MdOutlineArrowDropDown />
+              <TbFileExport className="mr-1 mt-[2px] bg-[#36C6D3]" />
+              Export <MdOutlineArrowDropDown className="bg-[#36C6D3]" />
             </button>
             {exportOpen && (
               <div className="absolute w-[100px] text-black p-2 right-0 mt-2 border border-gray-300 rounded-lg">
                 <ul className="p">
-                  <li className="flex p-1 font-medium items-center border-b border-gray-400 mb-2 hover:bg-[#36C6D3] rounded-lg"> <FaFileCsv className="mr-1"/> Csv</li>
-                  <li className="flex p-1 font-medium items-center hover:bg-[#36C6D3] rounded-lg "> <FaFileCsv className="mr-1"/> Csv</li>
+                  <li className="flex p-1 font-medium items-center border-b border-gray-400 mb-2 hover:bg-[#36C6D3] rounded-lg">
+                    {" "}
+                    <FaFileCsv className="mr-1" /> Csv
+                  </li>
+                  <li className="flex p-1 font-medium items-center hover:bg-[#36C6D3] rounded-lg ">
+                    {" "}
+                    <FaFileCsv className="mr-1" /> Csv
+                  </li>
                 </ul>
               </div>
             )}
           </div>
-          <button className="bg-[#36C6D3] h-[2.1rem] w-[4.5rem] rounded-lg">
-            <a className="flex  p-2" href=""> <TbReload className=" mr-[3px] text-lg"/>Reload</a>
+          <button className="bg-[#36C6D3] h-[2.1rem] w-full md:w-[4.5rem] rounded-lg mt-2 md:mt-0">
+            <a className="flex  p-2" href="">
+              {" "}
+              <TbReload className=" mr-[3px] text-lg" />
+              Reload
+            </a>
           </button>
         </div>
       </div>
 
       <CardContent>
-        <TableContainer component={Paper}>
-          <Table aria-label="custom table">
-            <TableHead>
-              <TableRow>
-                <TableCell>
-                  <Button onClick={() => handleSort("column1")}>
-                    {props.column1}
-                    {orderBy === "column1" ? (
-                      <span>
-                        {order === "desc" ? <ArrowDownward /> : <ArrowUpward />}
-                      </span>
-                    ) : null}
-                  </Button>
-                </TableCell>
-                <TableCell>
-                  <Button onClick={() => handleSort("column2")}>
-                    {props.column2}
-                    {orderBy === "column2" ? (
-                      <span>
-                        {order === "desc" ? <ArrowDownward /> : <ArrowUpward />}
-                      </span>
-                    ) : null}
-                  </Button>
-                </TableCell>
-                <TableCell>
-                  <Button onClick={() => handleSort("column3")}>
-                    {props.column3}
-                    {orderBy === "column3" ? (
-                      <span>
-                        {order === "desc" ? <ArrowDownward /> : <ArrowUpward />}
-                      </span>
-                    ) : null}
-                  </Button>
-                </TableCell>
-                <TableCell>
-                  <Button onClick={() => handleSort("column4")}>
-                    {props.column4}
-                    {orderBy === "column4" ? (
-                      <span>
-                        {order === "desc" ? <ArrowDownward /> : <ArrowUpward />}
-                      </span>
-                    ) : null}
-                  </Button>
-                </TableCell>
-                <TableCell>
-                  <Button onClick={() => handleSort("column5")}>
-                    {props.column5}
-                    {orderBy === "column5" ? (
-                      <span>
-                        {order === "desc" ? <ArrowDownward /> : <ArrowUpward />}
-                      </span>
-                    ) : null}
-                  </Button>
-                </TableCell>
-                <TableCell>
-                  <Button onClick={() => handleSort("column6")}>
-                    {props.column6}
-                    {orderBy === "column6" ? (
-                      <span>
-                        {order === "desc" ? <ArrowDownward /> : <ArrowUpward />}
-                      </span>
-                    ) : null}
-                  </Button>
-                </TableCell>
-                <TableCell>
-                  <Button onClick={() => handleSort("column7")}>
-                    {props.column7}
-                    {orderBy === "column7" ? (
-                      <span>
-                        {order === "desc" ? <ArrowDownward /> : <ArrowUpward />}
-                      </span>
-                    ) : null}
-                  </Button>
-                </TableCell>
-                <TableCell>
-                  <Button onClick={() => handleSort("column8")}>
-                    {props.column8}
-                    {orderBy === "column8" ? (
-                      <span>
-                        {order === "desc" ? <ArrowDownward /> : <ArrowUpward />}
-                      </span>
-                    ) : null}
-                  </Button>
-                </TableCell>
-                <TableCell>
-                  <Button>
-                    {props.column5}
-                    {orderBy === "column9" ? (
-                      <span>
-                        {order === "desc" ? <ArrowDownward /> : <ArrowUpward />}
-                      </span>
-                    ) : null}
-                  </Button>
-                </TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {paginatedData.map((row, index) => (
-                <TableRow key={index}>
-                  <TableCell>{row.column1}</TableCell>
-                  <TableCell>{row.column2}</TableCell>
-                  <TableCell>{row.column3}</TableCell>
-                  <TableCell>{row.column4}</TableCell>
-                  <TableCell>{row.column5}</TableCell>
-                  <TableCell>{row.column6}</TableCell>
-                  <TableCell>{row.column7}</TableCell>
-                  <TableCell>{row.column8}</TableCell>
-                  <TableCell>{row.column9}</TableCell>
+        <div className="overflow-x-auto">
+          <TableContainer component={Paper} className="min-w-full">
+            <Table aria-label="custom table" className="min-w-full">
+              <TableHead className="text-black">
+                <TableRow className="text-black">
+                  <TableCell className="text-black text-base-300">
+                    <Button onClick={() => handleSort("id")}>
+                      ID
+                      {orderBy === "id" ? (
+                        <span>
+                          {order === "desc" ? (
+                            <ArrowDownward />
+                          ) : (
+                            <ArrowUpward />
+                          )}
+                        </span>
+                      ) : null}
+                    </Button>
+                  </TableCell>
+                  <TableCell>
+                    <Button onClick={() => handleSort("Customer")}>
+                      Customer
+                      {orderBy === "Customer" ? (
+                        <span>
+                          {order === "desc" ? (
+                            <ArrowDownward />
+                          ) : (
+                            <ArrowUpward />
+                          )}
+                        </span>
+                      ) : null}
+                    </Button>
+                  </TableCell>
+                  <TableCell>
+                    <Button onClick={() => handleSort("Amount")}>
+                      Amount
+                      {orderBy === "Amount" ? (
+                        <span>
+                          {order === "desc" ? (
+                            <ArrowDownward />
+                          ) : (
+                            <ArrowUpward />
+                          )}
+                        </span>
+                      ) : null}
+                    </Button>
+                  </TableCell>
+                  <TableCell>
+                    <Button onClick={() => handleSort("ShippingAmount")}>
+                      Shipping Amount
+                      {orderBy === "ShippingAmount" ? (
+                        <span>
+                          {order === "desc" ? (
+                            <ArrowDownward />
+                          ) : (
+                            <ArrowUpward />
+                          )}
+                        </span>
+                      ) : null}
+                    </Button>
+                  </TableCell>
+                  <TableCell>
+                    <Button onClick={() => handleSort("PaymentMethod")}>
+                      Payment Method
+                      {orderBy === "PaymentMethod" ? (
+                        <span>
+                          {order === "desc" ? (
+                            <ArrowDownward />
+                          ) : (
+                            <ArrowUpward />
+                          )}
+                        </span>
+                      ) : null}
+                    </Button>
+                  </TableCell>
+                  <TableCell>
+                    <Button onClick={() => handleSort("PaymentStatus")}>
+                      Payment Status
+                      {orderBy === "PaymentStatus" ? (
+                        <span>
+                          {order === "desc" ? (
+                            <ArrowDownward />
+                          ) : (
+                            <ArrowUpward />
+                          )}
+                        </span>
+                      ) : null}
+                    </Button>
+                  </TableCell>
+                  <TableCell>
+                    <Button onClick={() => handleSort("Status")}>
+                      Status
+                      {orderBy === "Status" ? (
+                        <span>
+                          {order === "desc" ? (
+                            <ArrowDownward />
+                          ) : (
+                            <ArrowUpward />
+                          )}
+                        </span>
+                      ) : null}
+                    </Button>
+                  </TableCell>
+                  <TableCell>
+                    <Button onClick={() => handleSort("CreatedAt")}>
+                      Created At
+                      {orderBy === "CreatedAt" ? (
+                        <span>
+                          {order === "desc" ? (
+                            <ArrowDownward />
+                          ) : (
+                            <ArrowUpward />
+                          )}
+                        </span>
+                      ) : null}
+                    </Button>
+                  </TableCell>
                 </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </TableContainer>
-        <TablePagination
-          rowsPerPageOptions={[5, 10, 25]}
-          component="div"
-          count={filteredData.length}
-          rowsPerPage={rowsPerPage}
-          page={page}
-          onPageChange={handleChangePage}
-          onRowsPerPageChange={(event) => {
-            setRowsPerPage(parseInt(event.target.value, 10));
-            setPage(0);
-          }}
-        />
+              </TableHead>
+              <TableBody>
+                {paginatedData.map((row, index) => (
+                  <TableRow key={index}>
+                    <TableCell className="whitespace-nowrap">
+                      {row.id}
+                    </TableCell>
+                    <TableCell>{row.Customer}</TableCell>
+                    <TableCell>{row.Amount}</TableCell>
+                    <TableCell>{row.ShippingAmount}</TableCell>
+                    <TableCell>{row.PaymentMethod}</TableCell>
+                    <TableCell>{getPaymentStatus(row.PaymentStatus)}</TableCell>
+                    <TableCell>{getStatus(row.Status)}</TableCell>
+                    <TableCell>{row.CreatedAt}</TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </TableContainer>
+          <TablePagination
+            rowsPerPageOptions={[5, 10, 25]}
+            component="div"
+            count={filteredData.length}
+            rowsPerPage={rowsPerPage}
+            page={page}
+            onPageChange={handleChangePage}
+            onRowsPerPageChange={(event) => {
+              setRowsPerPage(parseInt(event.target.value, 10));
+              setPage(0);
+            }}
+          />
+        </div>
       </CardContent>
     </Card>
   );
