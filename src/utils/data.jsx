@@ -63,4 +63,18 @@ const dataBar= () => [
   
   ];
 
-export { orders, dataBar };
+  const recentOrders= ()=> [
+    {id : "#10000312", Date : "Agt 07, 2023", Customer : "adam", Payment: "Completed", Status: "Pending", Total : "Rp8.867.850",},
+    {id : "#10000310", Date : "Agt 04, 2023", Customer : "coba 2", Payment: "Completed", Status: "Processing", Total : "Rp3.727.280",},
+    {id : "#10000288", Date : "Agt 02, 2023", Customer : "Ayu Tia", Payment: "Pending", Status: "Pending", Total : "Rp48.200",},
+    {id : "#10000274", Date : "Jul 29, 2023", Customer : "coba", Payment: "Completed", Status: "Pending", Total : "Rp9.518.000",},
+    {id : "#10000274", Date : "Jul 28, 2023", Customer : "jusuf firmansyah", Payment: "Pending", Status: "Processing", Total : "Rp9.518.000",},
+    {id : "#10000274", Date : "Jul 28, 2023", Customer : "jusuf firmansyah", Payment: "Completed", Status: "Pending", Total : "Rp9.518.000",},
+    {id : "#10000274", Date : "Jul 28, 2023", Customer : "jusuf firmansyah", Payment: "Pending", Status: "Completed", Total : "Rp9.518.000",},
+    {id : "#10000274", Date : "Jul 28, 2023", Customer : "jusuf firmansyah", Payment: "Completed", Status: "Processing", Total : "Rp9.518.000",},
+    {id : "#10000274", Date : "Jul 28, 2023", Customer : "jusuf firmansyah", Payment: "Pending", Status: "Completed", Total : "Rp9.518.000",},
+    {id : "#10000274", Date : "Jul 28, 2023", Customer : "jusuf firmansyah", Payment: "Completed", Status: "Completed", Total : "Rp9.518.000",},
+    {id : "#10000274", Date : "Jul 28, 2023", Customer : "jusuf firmansyah", Payment: "Pending", Status: "Processing", Total : "Rp9.518.000",},
+  ]
+
+export { orders, dataBar, recentOrders };

@@ -18,7 +18,7 @@ import { TbFileExport, TbReload } from "react-icons/tb";
 import { FaFileCsv } from "react-icons/fa";
 import { ArrowUpward, ArrowDownward, Search } from "@mui/icons-material";
 
-const TableOrders = (props) => {
+const TableDashboard = (props) => {
   const { tableData } = props;
   const [orderBy, setOrderBy] = useState("");
   const [order, setOrder] = useState("asc");
@@ -52,7 +52,7 @@ const TableOrders = (props) => {
           {Status}
         </div>
       );
-    if (Status === "Processed")
+    if (Status === "Processing")
       return (
         <div className="card rounded-md bg-blue-400 text-center text-xs font-semibold">
           {Status}
@@ -64,7 +64,7 @@ const TableOrders = (props) => {
           {Status}
         </div>
       );
-    else return <div className="badge badge-ghost">{PaymentStatus}</div>;
+    else return <div className="badge badge-ghost">{Status}</div>;
   };
 
   const handleSort = (property) => {
@@ -77,6 +77,16 @@ const TableOrders = (props) => {
     const value = event.target.value;
     setSearchTerm(value);
     setPage(0);
+  };
+
+  const handleEdit = (rowId) => {
+    // Implement the edit action based on the rowId
+    console.log(`Edit row with ID ${rowId}`);
+  };
+
+  const handleDelete = (rowId) => {
+    // Implement the delete action based on the rowId
+    console.log(`Delete row with ID ${rowId}`);
   };
 
   const sortedData = orderBy
@@ -174,6 +184,20 @@ const TableOrders = (props) => {
                       ) : null}
                     </Button>
                   </TableCell>
+                  <TableCell className="text-black ">
+                    <Button onClick={() => handleSort("Date")}>
+                      Date
+                      {orderBy === "Date" ? (
+                        <span>
+                          {order === "desc" ? (
+                            <ArrowDownward />
+                          ) : (
+                            <ArrowUpward />
+                          )}
+                        </span>
+                      ) : null}
+                    </Button>
+                  </TableCell>
                   <TableCell>
                     <Button onClick={() => handleSort("Customer")}>
                       Customer
@@ -189,51 +213,9 @@ const TableOrders = (props) => {
                     </Button>
                   </TableCell>
                   <TableCell>
-                    <Button onClick={() => handleSort("Amount")}>
-                      Amount
-                      {orderBy === "Amount" ? (
-                        <span>
-                          {order === "desc" ? (
-                            <ArrowDownward />
-                          ) : (
-                            <ArrowUpward />
-                          )}
-                        </span>
-                      ) : null}
-                    </Button>
-                  </TableCell>
-                  <TableCell>
-                    <Button onClick={() => handleSort("ShippingAmount")}>
-                      Shipping Amount
-                      {orderBy === "ShippingAmount" ? (
-                        <span>
-                          {order === "desc" ? (
-                            <ArrowDownward />
-                          ) : (
-                            <ArrowUpward />
-                          )}
-                        </span>
-                      ) : null}
-                    </Button>
-                  </TableCell>
-                  <TableCell>
-                    <Button onClick={() => handleSort("PaymentMethod")}>
+                    <Button onClick={() => handleSort("Payment")}>
                       Payment Method
-                      {orderBy === "PaymentMethod" ? (
-                        <span>
-                          {order === "desc" ? (
-                            <ArrowDownward />
-                          ) : (
-                            <ArrowUpward />
-                          )}
-                        </span>
-                      ) : null}
-                    </Button>
-                  </TableCell>
-                  <TableCell>
-                    <Button onClick={() => handleSort("PaymentStatus")}>
-                      Payment Status
-                      {orderBy === "PaymentStatus" ? (
+                      {orderBy === "Payment" ? (
                         <span>
                           {order === "desc" ? (
                             <ArrowDownward />
@@ -259,9 +241,9 @@ const TableOrders = (props) => {
                     </Button>
                   </TableCell>
                   <TableCell>
-                    <Button onClick={() => handleSort("CreatedAt")}>
+                    <Button onClick={() => handleSort("Total")}>
                       Created At
-                      {orderBy === "CreatedAt" ? (
+                      {orderBy === "Total" ? (
                         <span>
                           {order === "desc" ? (
                             <ArrowDownward />
@@ -281,13 +263,11 @@ const TableOrders = (props) => {
                     <TableCell className="whitespace-nowrap">
                       {row.id}
                     </TableCell>
+                    <TableCell>{row.Date}</TableCell>
                     <TableCell>{row.Customer}</TableCell>
-                    <TableCell>{row.Amount}</TableCell>
-                    <TableCell>{row.ShippingAmount}</TableCell>
-                    <TableCell>{row.PaymentMethod}</TableCell>
-                    <TableCell>{getPaymentStatus(row.PaymentStatus)}</TableCell>
+                    <TableCell>{getPaymentStatus(row.Payment)}</TableCell>
                     <TableCell>{getStatus(row.Status)}</TableCell>
-                    <TableCell>{row.CreatedAt}</TableCell>
+                    <TableCell>{row.Total}</TableCell>
                     <TableCell>
                       <div className="flex gap-2">
                         <button
@@ -327,4 +307,4 @@ const TableOrders = (props) => {
   );
 };
 
-export default TableOrders;
+export default TableDashboard;

@@ -27,8 +27,8 @@ function Barchart() {
   <div className="flex ">
     <div className="basis-[50%]">
       <BarChart
-        width={700}
-        height={400}
+        width={400}
+        height={300}
         data={data}
         margin={{
           top: 5,
