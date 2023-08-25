@@ -23,7 +23,7 @@ function Dashboard() {
       <Statistic/>
       </div>
       <div className="card p-4">
-          <TableDashboard  tableData={data}/>
+          <TableDashboard  DataDashboard ={data}/>
           
         </div>
     </div>

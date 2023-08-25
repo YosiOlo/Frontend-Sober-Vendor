@@ -19,13 +19,16 @@ import { FaFileCsv } from "react-icons/fa";
 import { ArrowUpward, ArrowDownward, Search } from "@mui/icons-material";
 
 const TableDashboard = (props) => {
-  const { tableData } = props;
+  const { DataDashboard } = props;
+  const [tableData, setTableData] = useState( DataDashboard);
   const [orderBy, setOrderBy] = useState("");
   const [order, setOrder] = useState("asc");
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [searchTerm, setSearchTerm] = useState("");
   const [exportOpen, setexportOpen] = useState(false);
+  const [rowToDelete, setRowToDelete] = useState(null); // Store the ID of the row to delete
+
 
   const toggleExport = () => {
     setexportOpen(!exportOpen);
@@ -85,9 +88,18 @@ const TableDashboard = (props) => {
   };
 
   const handleDelete = (rowId) => {
-    // Implement the delete action based on the rowId
-    console.log(`Delete row with ID ${rowId}`);
+    setRowToDelete(rowId);
   };
+
+  const confirmDelete = () => {
+    if (rowToDelete) {
+      // Update the data and remove the row with the specified ID
+      const updatedData = tableData.filter((row) => row.id !== rowToDelete);
+      setTableData(updatedData);
+      setRowToDelete(null); // Clear the rowToDelete
+    }
+  };
+
 
   const sortedData = orderBy
     ? [...tableData].sort((a, b) =>
@@ -276,9 +288,11 @@ const TableDashboard = (props) => {
                         >
                           <MdEdit />
                         </button>
+
+
                         <button
                           className="bg-red-500 text-white px-2 py-1 rounded-md"
-                          onClick={() => handleDelete(row.id)} // Implement the handleDelete function
+                          onClick={() => handleDelete(row.id)}
                         >
                           <MdDelete />
                         </button>
@@ -303,6 +317,27 @@ const TableDashboard = (props) => {
           />
         </div>
       </CardContent>
+      {rowToDelete && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+          <div className="bg-white p-6 rounded-lg">
+            <p>Are you sure you want to delete this row?</p>
+            <div className="mt-4 flex justify-end">
+              <button
+                className="bg-red-500 text-white px-3 py-1 rounded-md"
+                onClick={confirmDelete}
+              >
+                Delete
+              </button>
+              <button
+                className="bg-gray-300 text-black px-3 py-1 rounded-md ml-2"
+                onClick={() => setRowToDelete(null)}
+              >
+                Cancel
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </Card>
   );
 };

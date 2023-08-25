@@ -7,7 +7,7 @@ function Orders() {
   const data = orders();
   return (
     <div className="">
-      <TopBar title="Chats" />
+      <TopBar title="Orders" />
       <div className="container p-4">
         <div className="card">
           <TableOrders

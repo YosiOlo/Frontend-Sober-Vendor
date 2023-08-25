@@ -120,7 +120,7 @@ const TableOrders = (props) => {
             endAdornment: <Search />,
           }}
         />
-        <div className="action flex flex-col md:flex-row space-x-0 md:space-x-3 font-semibold text-[12px] ">
+        <div className="action flex flex-col sm:w-[100%] md:flex-row space-x-0 md:space-x-3 font-semibold text-[12px] ">
           <div className="relative">
             <button
               className="flex px-4 py-2 bg-[#36C6D3] rounded-lg"
@@ -154,7 +154,7 @@ const TableOrders = (props) => {
         </div>
       </div>
 
-      <CardContent>
+      <CardContent className="sm:w-auto">
         <div className="overflow-x-auto">
           <TableContainer component={Paper} className="min-w-full">
             <Table aria-label="custom table" className="min-w-full">
