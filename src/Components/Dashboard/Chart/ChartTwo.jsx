@@ -50,8 +50,7 @@ function ChartTwo() {
           <MdNavigateNext className="mt-1 ml-[-8px] text-blue-400" />
         </p>
       </div>
-      <div className="flex">
-        <div className="basis-[25%]">
+      <div className="">
           <PieChart width={400} height={400}>
             <Pie
               data={data}
@@ -71,7 +70,7 @@ function ChartTwo() {
               ))}
             </Pie>
           </PieChart>
-          <div className="balance mt-[-150px]">
+          <div className="balance">
             <h2 className="font-semibold text-[14px]">Balance</h2>
             <p className="flex text-[18px] font-bold"> <MdOutlineAccountBalanceWallet className="text-3xl"/>Rp.0</p>
           </div>
@@ -93,7 +92,6 @@ function ChartTwo() {
           </div>
         </div>
       </div>
-    </div>
   );
 }
 export default ChartTwo;

@@ -1,12 +1,12 @@
 import React from 'react';
 import TopBar from '../Components/TopBar/TopBar';
 
-function Coupons() {
+function EtalasePage() {
   return (
     <div>
-      <TopBar title="Coupons"/>
+      <TopBar title="Etalase"/>
     </div>
   )
 }
 
-export default Coupons
+export default EtalasePage

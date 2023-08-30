@@ -12,17 +12,17 @@ import {HiOutlineDatabase} from 'react-icons/hi'
 
 
 
-function Dashboard() {
+function DashboardPage() {
   const data= recentOrders();
   return (
     <div>
       <TopBar title="Dashboard" />
-      <div className="flex w-full ">
+      <div className="flex sm: flex-wrap ">
       <Barchart/>
       <ChartTwo/>
       <Statistic/>
       </div>
-      <div className="card p-4">
+      <div className="card p-4 text-[12px]">
           <TableDashboard  DataDashboard ={data}/>
           
         </div>
@@ -30,4 +30,4 @@ function Dashboard() {
   );
 }
 
-export default Dashboard;
+export default DashboardPage;

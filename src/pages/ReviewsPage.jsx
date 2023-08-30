@@ -1,7 +1,7 @@
 import React from 'react';
 import TopBar from '../Components/TopBar/TopBar';
 
-function Reviews() {
+function ReviewsPage() {
   return (
     <div>
       <TopBar title="Reviews"/>
@@ -9,4 +9,4 @@ function Reviews() {
   )
 }
 
-export default Reviews
+export default ReviewsPage

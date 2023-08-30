@@ -3,7 +3,7 @@ import TopBar from "../Components/TopBar/TopBar";
 import TableOrders from "../Components/TableOrders";
 import { orders } from "../utils/data";
 
-function Orders() {
+function OrdersPage() {
   const data = orders();
   return (
     <div className="">
@@ -11,7 +11,7 @@ function Orders() {
       <div className="container p-4">
         <div className="card">
           <TableOrders
-            tableData={data}
+            DataOrders={data}
           />
           
         </div>
@@ -20,4 +20,4 @@ function Orders() {
   );
 }
 
-export default Orders;
+export default OrdersPage;

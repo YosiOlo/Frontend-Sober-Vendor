@@ -1,7 +1,7 @@
 import React from 'react';
 import TopBar from '../Components/TopBar/TopBar';
 
-function WIthdrawals() {
+function WIthdrawalsPage() {
   return (
     <div>
       <TopBar title="Withdrawals"/>
@@ -9,4 +9,4 @@ function WIthdrawals() {
   )
 }
 
-export default WIthdrawals
+export default WIthdrawalsPage

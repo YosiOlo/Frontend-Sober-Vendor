@@ -1,32 +1,32 @@
 import { Route, Routes } from "react-router-dom";
 import RootLayout from "./layouts/RootLayout";
-import Dashboard from "./pages/Dashboard";
-import Chats from "./pages/Chats";
-import Coupons from "./pages/Coupons";
-import Etalase from "./pages/Etalase";
-import OrderReturns from "./pages/OrderReturns";
-import Orders from "./pages/Orders";
-import Products from "./pages/Products";
-import Revenue from "./pages/Revenue";
-import Reviews from "./pages/Reviews";
-import Withdrawals from "./pages/WIthdrawals";
-import Settings from "./pages/Settings";
+import DashboardPage from "./pages/DashboardPage";
+import ChatsPage from "./pages/ChatsPage";
+import CouponsPage from "./pages/CouponsPage";
+import EtalasePage from "./pages/EtalasePage";
+import OrderReturnsPage from "./pages/OrderReturnsPage";
+import OrdersPage from "./pages/OrdersPage";
+import ProductsPage from "./pages/ProductsPage";
+import RevenuePage from "./pages/RevenuePage";
+import ReviewsPage from "./pages/ReviewsPage";
+import WithdrawalsPage from "./pages/WIthdrawalsPage";
+import SettingsPage from "./pages/SettingsPage";
 
 const App = () => {
   return (
     <RootLayout>
       <Routes>
-        <Route path="/VenDashboard" element={<Dashboard />} />
-        <Route path="/VenProducts" element={<Products />} />
-        <Route path="/VenChats" element={<Chats />} />
-        <Route path="/VenOrders" element={<Orders />} />
-        <Route path="/VenOrderReturns" element={<OrderReturns />} />
-        <Route path="/VenRevenue" element={<Revenue />} />
-        <Route path="/VenEtalase" element={<Etalase />} />
-        <Route path="/VenCoupons" element={<Coupons />} />
-        <Route path="/VenWithdrawals" element={<Withdrawals />} />
-        <Route path="/VenReviews" element={<Reviews />} />
-        <Route path="/VenSettings" element={<Settings />} />
+        <Route path="/VenDashboard" element={<DashboardPage />} />
+        <Route path="/VenProducts" element={<ProductsPage />} />
+        <Route path="/VenChats" element={<ChatsPage />} />
+        <Route path="/VenOrders" element={<OrdersPage />} />
+        <Route path="/VenOrderReturns" element={<OrderReturnsPage />} />
+        <Route path="/VenRevenue" element={<RevenuePage />} />
+        <Route path="/VenEtalase" element={<EtalasePage />} />
+        <Route path="/VenCoupons" element={<CouponsPage />} />
+        <Route path="/VenWithdrawals" element={<WithdrawalsPage />} />
+        <Route path="/VenReviews" element={<ReviewsPage />} />
+        <Route path="/VenSettings" element={<SettingsPage />} />
       </Routes>
     </RootLayout>
   );

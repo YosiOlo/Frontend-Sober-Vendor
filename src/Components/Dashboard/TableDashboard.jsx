@@ -13,6 +13,7 @@ import {
   TablePagination,
   TextField,
 } from "@mui/material";
+import EditForm from "./EditForm";
 import { MdOutlineArrowDropDown, MdEdit, MdDelete } from "react-icons/md";
 import { TbFileExport, TbReload } from "react-icons/tb";
 import { FaFileCsv } from "react-icons/fa";
@@ -81,12 +82,6 @@ const TableDashboard = (props) => {
     setSearchTerm(value);
     setPage(0);
   };
-
-  const handleEdit = (rowId) => {
-    // Implement the edit action based on the rowId
-    console.log(`Edit row with ID ${rowId}`);
-  };
-
   const handleDelete = (rowId) => {
     setRowToDelete(rowId);
   };
@@ -128,8 +123,37 @@ const TableDashboard = (props) => {
     setPage(newPage);
   };
 
+  // State untuk mengatur form edit
+const [editFormOpen, setEditFormOpen] = useState(false);
+const [editedRowData, setEditedRowData] = useState(null);
+
+// Fungsi untuk membuka form edit
+const handleEdit = (rowId) => {
+  const rowToEdit = tableData.find((row) => row.id === rowId);
+  setEditedRowData(rowToEdit);
+  setEditFormOpen(true);
+};
+
+// Fungsi untuk menutup form edit
+const handleEditFormClose = () => {
+  setEditFormOpen(false);
+  setEditedRowData(null);
+};
+
+// Fungsi untuk menyimpan perubahan dari form edit
+const handleEditFormSave = (editedData) => {
+  const updatedTableData = tableData.map((row) =>
+    row.id === editedData.id ? editedData : row
+  );
+  setTableData(updatedTableData);
+  handleEditFormClose();
+};
+
+
+
+
   return (
-    <Card className="mt-5 w-full">
+    <Card className="mt-5 flex-wrap text-[12px]">
       <div className="p-2 flex flex-col md:flex-row justify-between">
         <TextField
           label="Search"
@@ -177,7 +201,7 @@ const TableDashboard = (props) => {
       </div>
 
       <CardContent>
-        <div className="overflow-x-auto">
+        <div className="overflow-x-auto text-[12px]">
           <TableContainer component={Paper} className="min-w-full">
             <Table aria-label="custom table" className="min-w-full">
               <TableHead className="text-black">
@@ -254,7 +278,7 @@ const TableDashboard = (props) => {
                   </TableCell>
                   <TableCell>
                     <Button onClick={() => handleSort("Total")}>
-                      Created At
+                      Total
                       {orderBy === "Total" ? (
                         <span>
                           {order === "desc" ? (
@@ -281,14 +305,13 @@ const TableDashboard = (props) => {
                     <TableCell>{getStatus(row.Status)}</TableCell>
                     <TableCell>{row.Total}</TableCell>
                     <TableCell>
-                      <div className="flex gap-2">
-                        <button
-                          className="bg-blue-500 text-white px-2 py-1 rounded-md"
-                          onClick={() => handleEdit(row.id)} // Implement the handleEdit function
-                        >
-                          <MdEdit />
-                        </button>
-
+                          <div className="flex gap-2">
+                            <button
+                              className="bg-blue-500 text-white px-2 py-1 rounded-md"
+                              onClick={() => handleEdit(row.id)}
+                            >
+                              <MdEdit />
+                            </button>
 
                         <button
                           className="bg-red-500 text-white px-2 py-1 rounded-md"
@@ -315,7 +338,16 @@ const TableDashboard = (props) => {
               setPage(0);
             }}
           />
+          {editFormOpen && (
+          <EditForm
+            rowData={editedRowData}
+            open={editFormOpen}
+            onClose={handleEditFormClose}
+            onSave={handleEditFormSave}
+          />
+        )}
         </div>
+        
       </CardContent>
       {rowToDelete && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">

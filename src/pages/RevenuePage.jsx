@@ -1,7 +1,7 @@
 import React from 'react';
 import TopBar from '../Components/TopBar/TopBar';
 
-function Revenue() {
+function RevenuePage() {
   return (
     <div>
       <TopBar title="Revenue"/>
@@ -9,4 +9,4 @@ function Revenue() {
   )
 }
 
-export default Revenue
+export default RevenuePage

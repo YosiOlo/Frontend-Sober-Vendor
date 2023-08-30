@@ -1,12 +1,12 @@
 import React from 'react';
 import TopBar from '../Components/TopBar/TopBar';
 
-function OrderReturns() {
+function CouponsPage() {
   return (
     <div>
-      <TopBar title="OrderReturns"/>
+      <TopBar title="Coupons"/>
     </div>
   )
 }
 
-export default OrderReturns
+export default CouponsPage

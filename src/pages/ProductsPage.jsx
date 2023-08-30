@@ -2,7 +2,7 @@ import React from 'react';
 import TopBar from '../Components/TopBar/TopBar';
 import {HiOutlineShoppingBag} from 'react-icons/hi'
 
-function Products() {
+function ProductsPage() {
   return (
     <div>
       <TopBar title="Products"/>
@@ -10,4 +10,4 @@ function Products() {
   )
 }
 
-export default Products
+export default ProductsPage

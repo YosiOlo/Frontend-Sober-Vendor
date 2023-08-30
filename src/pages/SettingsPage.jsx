@@ -1,12 +1,12 @@
 import React from 'react';
 import TopBar from '../Components/TopBar/TopBar';
 
-function Etalase() {
+function SettingsPage() {
   return (
     <div>
-      <TopBar title="Etalase"/>
+      <TopBar title="Settings"/>
     </div>
   )
 }
 
-export default Etalase
+export default SettingsPage

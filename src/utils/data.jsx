@@ -68,13 +68,26 @@ const dataBar= () => [
     {id : "#10000310", Date : "Agt 04, 2023", Customer : "coba 2", Payment: "Completed", Status: "Processing", Total : "Rp3.727.280",},
     {id : "#10000288", Date : "Agt 02, 2023", Customer : "Ayu Tia", Payment: "Pending", Status: "Pending", Total : "Rp48.200",},
     {id : "#10000274", Date : "Jul 29, 2023", Customer : "coba", Payment: "Completed", Status: "Pending", Total : "Rp9.518.000",},
-    {id : "#10000274", Date : "Jul 28, 2023", Customer : "jusuf firmansyah", Payment: "Pending", Status: "Processing", Total : "Rp9.518.000",},
-    {id : "#10000274", Date : "Jul 28, 2023", Customer : "jusuf firmansyah", Payment: "Completed", Status: "Pending", Total : "Rp9.518.000",},
-    {id : "#10000274", Date : "Jul 28, 2023", Customer : "jusuf firmansyah", Payment: "Pending", Status: "Completed", Total : "Rp9.518.000",},
-    {id : "#10000274", Date : "Jul 28, 2023", Customer : "jusuf firmansyah", Payment: "Completed", Status: "Processing", Total : "Rp9.518.000",},
-    {id : "#10000274", Date : "Jul 28, 2023", Customer : "jusuf firmansyah", Payment: "Pending", Status: "Completed", Total : "Rp9.518.000",},
-    {id : "#10000274", Date : "Jul 28, 2023", Customer : "jusuf firmansyah", Payment: "Completed", Status: "Completed", Total : "Rp9.518.000",},
-    {id : "#10000274", Date : "Jul 28, 2023", Customer : "jusuf firmansyah", Payment: "Pending", Status: "Processing", Total : "Rp9.518.000",},
-  ]
+    {id : "#10000275", Date : "Jul 28, 2023", Customer : "jusuf firmansyah", Payment: "Pending", Status: "Processing", Total : "Rp9.518.000",},
+    {id : "#10000276", Date : "Jul 28, 2023", Customer : "jusuf firmansyah", Payment: "Completed", Status: "Pending", Total : "Rp9.518.000",},
+    {id : "#10000277", Date : "Jul 28, 2023", Customer : "jusuf firmansyah", Payment: "Pending", Status: "Completed", Total : "Rp9.518.000",},
+    {id : "#10000278", Date : "Jul 28, 2023", Customer : "jusuf firmansyah", Payment: "Completed", Status: "Processing", Total : "Rp9.518.000",},
+    {id : "#10000279", Date : "Jul 28, 2023", Customer : "jusuf firmansyah", Payment: "Pending", Status: "Completed", Total : "Rp9.518.000",},
+    {id : "#10000270", Date : "Jul 28, 2023", Customer : "jusuf firmansyah", Payment: "Completed", Status: "Completed", Total : "Rp9.518.000",},
+    {id : "#10000212", Date : "Jul 28, 2023", Customer : "jusuf firmansyah", Payment: "Pending", Status: "Processing", Total : "Rp9.518.000",},
+  ];
 
-export { orders, dataBar, recentOrders };
+  const OrderReturns = ()=>  [
+    {id : "#10000312", OrderId : "Agt 07, 2023", Customer : "adam", ProductItem: "Completed", Status: "Pending", CreatedAt : "Rp8.867.850",},
+    {id : "#10000310", OrderId : "Agt 04, 2023", Customer : "coba 2", ProductItem: "Completed", Status: "Processing", CreatedAt : "Rp3.727.280",},
+    {id : "#10000288", OrderId : "Agt 02, 2023", Customer : "Ayu Tia", ProductItem: "Pending", Status: "Pending", CreatedAt : "Rp48.200",},
+    {id : "#10000274", OrderId : "Jul 29, 2023", Customer : "coba", ProductItem: "Completed", Status: "Pending", CreatedAt : "Rp9.518.000",},
+    {id : "#10000275", OrderId : "Jul 28, 2023", Customer : "jusuf firmansyah", ProductItem: "Pending", Status: "Processing", CreatedAt : "Rp9.518.000",},
+    {id : "#10000276", OrderId : "Jul 28, 2023", Customer : "jusuf firmansyah", ProductItem: "Completed", Status: "Pending", CreatedAt : "Rp9.518.000",},
+    {id : "#10000277", OrderId : "Jul 28, 2023", Customer : "jusuf firmansyah", ProductItem: "Pending", Status: "Completed", CreatedAt : "Rp9.518.000",},
+    {id : "#10000278", OrderId : "Jul 28, 2023", Customer : "jusuf firmansyah", ProductItem: "Completed", Status: "Processing", CreatedAt : "Rp9.518.000",},
+    {id : "#10000279", OrderId : "Jul 28, 2023", Customer : "jusuf firmansyah", ProductItem: "Pending", Status: "Completed", CreatedAt : "Rp9.518.000",},
+    {id : "#10000270", OrderId : "Jul 28, 2023", Customer : "jusuf firmansyah", ProductItem: "Completed", Status: "Completed", CreatedAt : "Rp9.518.000",},
+    {id : "#10000212", OrderId : "Jul 28, 2023", Customer : "jusuf firmansyah", ProductItem: "Pending", Status: "Processing", CreatedAt : "Rp9.518.000",},
+  ];
+export { orders, dataBar, recentOrders, OrderReturns };

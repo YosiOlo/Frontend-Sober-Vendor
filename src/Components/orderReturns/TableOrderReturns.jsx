@@ -18,9 +18,9 @@ import { TbFileExport, TbReload } from "react-icons/tb";
 import { FaFileCsv } from "react-icons/fa";
 import { ArrowUpward, ArrowDownward, Search } from "@mui/icons-material";
 
-const TableOrders = (props) => {
-  const { DataOrders } = props;
-  const [tableData, setTableData] = useState(DataOrders);
+const TableOrderReturns = (props) => {
+  const { DataOrderReturns } = props;
+  const [tableData, setTableData] = useState(DataOrderReturns);
   const [orderBy, setOrderBy] = useState("");
   const [order, setOrder] = useState("asc");
   const [page, setPage] = useState(0);
@@ -32,21 +32,7 @@ const TableOrders = (props) => {
   const toggleExport = () => {
     setexportOpen(!exportOpen);
   };
-  const getPaymentStatus = (PaymentStatus) => {
-    if (PaymentStatus === "Completed")
-      return (
-        <div className="card rounded-md bg-green-400 text-center text-xs font-semibold">
-          {PaymentStatus}
-        </div>
-      );
-    if (PaymentStatus === "Pending")
-      return (
-        <div className="card rounded-md bg-yellow-400 text-center text-xs font-semibold">
-          {PaymentStatus}
-        </div>
-      );
-    else return <div className="badge badge-ghost">{PaymentStatus}</div>;
-  };
+
   const getStatus = (Status) => {
     if (Status === "Completed")
       return (
@@ -54,7 +40,7 @@ const TableOrders = (props) => {
           {Status}
         </div>
       );
-    if (Status === "Processed")
+    if (Status === "Processing")
       return (
         <div className="card rounded-md bg-blue-400 text-center text-xs font-semibold">
           {Status}
@@ -66,7 +52,7 @@ const TableOrders = (props) => {
           {Status}
         </div>
       );
-    else return <div className="badge badge-ghost">{PaymentStatus}</div>;
+    else return <div className="badge badge-ghost">{Status}</div>;
   };
 
   const handleSort = (property) => {
@@ -80,18 +66,6 @@ const TableOrders = (props) => {
     setSearchTerm(value);
     setPage(0);
   };
-
-  const sortedData = orderBy
-    ? [...tableData].sort((a, b) =>
-        order === "asc"
-          ? a[orderBy] < b[orderBy]
-            ? -1
-            : 1
-          : b[orderBy] < a[orderBy]
-          ? -1
-          : 1
-      )
-    : tableData;
   const handleDelete = (rowId) => {
     setRowToDelete(rowId);
   };
@@ -104,6 +78,18 @@ const TableOrders = (props) => {
       setRowToDelete(null); // Clear the rowToDelete
     }
   };
+
+  const sortedData = orderBy
+    ? [...tableData].sort((a, b) =>
+        order === "asc"
+          ? a[orderBy] < b[orderBy]
+            ? -1
+            : 1
+          : b[orderBy] < a[orderBy]
+          ? -1
+          : 1
+      )
+    : tableData;
 
   const filteredData = sortedData.filter((row) =>
     Object.values(row).some((value) =>
@@ -121,7 +107,7 @@ const TableOrders = (props) => {
   };
 
   return (
-    <Card className="mt-5 w-full">
+    <Card className="mt-5 w-full text-[10px]">
       <div className="p-2 flex flex-col md:flex-row justify-between">
         <TextField
           label="Search"
@@ -134,7 +120,7 @@ const TableOrders = (props) => {
             endAdornment: <Search />,
           }}
         />
-        <div className="action flex flex-col sm:w-[100%] md:flex-row space-x-0 md:space-x-3 font-semibold text-[12px] ">
+        <div className="action flex flex-col md:flex-row space-x-0 md:space-x-3 font-semibold text-[12px] ">
           <div className="relative">
             <button
               className="flex px-4 py-2 bg-[#36C6D3] rounded-lg"
@@ -168,7 +154,7 @@ const TableOrders = (props) => {
         </div>
       </div>
 
-      <CardContent className="sm:w-auto">
+      <CardContent>
         <div className="overflow-x-auto">
           <TableContainer component={Paper} className="min-w-full">
             <Table aria-label="custom table" className="min-w-full">
@@ -178,6 +164,20 @@ const TableOrders = (props) => {
                     <Button onClick={() => handleSort("id")}>
                       ID
                       {orderBy === "id" ? (
+                        <span>
+                          {order === "desc" ? (
+                            <ArrowDownward />
+                          ) : (
+                            <ArrowUpward />
+                          )}
+                        </span>
+                      ) : null}
+                    </Button>
+                  </TableCell>
+                  <TableCell className="text-black ">
+                    <Button onClick={() => handleSort("OrderId")}>
+                      Order Id
+                      {orderBy === "OrderId" ? (
                         <span>
                           {order === "desc" ? (
                             <ArrowDownward />
@@ -203,51 +203,9 @@ const TableOrders = (props) => {
                     </Button>
                   </TableCell>
                   <TableCell>
-                    <Button onClick={() => handleSort("Amount")}>
-                      Amount
-                      {orderBy === "Amount" ? (
-                        <span>
-                          {order === "desc" ? (
-                            <ArrowDownward />
-                          ) : (
-                            <ArrowUpward />
-                          )}
-                        </span>
-                      ) : null}
-                    </Button>
-                  </TableCell>
-                  <TableCell>
-                    <Button onClick={() => handleSort("ShippingAmount")}>
-                      Shipping Amount
-                      {orderBy === "ShippingAmount" ? (
-                        <span>
-                          {order === "desc" ? (
-                            <ArrowDownward />
-                          ) : (
-                            <ArrowUpward />
-                          )}
-                        </span>
-                      ) : null}
-                    </Button>
-                  </TableCell>
-                  <TableCell>
-                    <Button onClick={() => handleSort("PaymentMethod")}>
-                      Payment Method
-                      {orderBy === "PaymentMethod" ? (
-                        <span>
-                          {order === "desc" ? (
-                            <ArrowDownward />
-                          ) : (
-                            <ArrowUpward />
-                          )}
-                        </span>
-                      ) : null}
-                    </Button>
-                  </TableCell>
-                  <TableCell>
-                    <Button onClick={() => handleSort("PaymentStatus")}>
-                      Payment Status
-                      {orderBy === "PaymentStatus" ? (
+                    <Button onClick={() => handleSort("ProductItem")}>
+                      Product Item
+                      {orderBy === "ProductItem" ? (
                         <span>
                           {order === "desc" ? (
                             <ArrowDownward />
@@ -295,24 +253,20 @@ const TableOrders = (props) => {
                     <TableCell className="whitespace-nowrap">
                       {row.id}
                     </TableCell>
+                    <TableCell>{row.OrderId}</TableCell>
                     <TableCell>{row.Customer}</TableCell>
-                    <TableCell>{row.Amount}</TableCell>
-                    <TableCell>{row.ShippingAmount}</TableCell>
-                    <TableCell>{row.PaymentMethod}</TableCell>
-                    <TableCell>{getPaymentStatus(row.PaymentStatus)}</TableCell>
+                    <TableCell>{row.ProductItem}</TableCell>
                     <TableCell>{getStatus(row.Status)}</TableCell>
                     <TableCell>{row.CreatedAt}</TableCell>
                     <TableCell>
                       <div className="flex gap-2">
-                        <button
-                          className="bg-blue-500 text-white px-2 py-1 rounded-md"
-                          onClick={() => handleEdit(row.id)} // Implement the handleEdit function
-                        >
+                        <button className="bg-blue-500 text-white px-2 py-1 rounded-md">
                           <MdEdit />
                         </button>
+
                         <button
                           className="bg-red-500 text-white px-2 py-1 rounded-md"
-                          onClick={() => handleDelete(row.id)} // Implement the handleDelete function
+                          onClick={() => handleDelete(row.id)}
                         >
                           <MdDelete />
                         </button>
@@ -338,12 +292,22 @@ const TableOrders = (props) => {
         </div>
       </CardContent>
       {rowToDelete && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 text-[14]">
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 text-[14px]">
           <div className="bg-white p-6 rounded-lg">
-            <p>Are you sure, you want to delete this row??</p>
-            <div className="mt-4 flex justify-end gap-3">
-              <button className="bg-red-600 text-white px-3 py-1 rounded-md" onClick={confirmDelete}>delete</button>
-              <button className="bg-gray-300 text-black px-3 py-1 rounded-md" onClick={()=> setRowToDelete(null)}>Cancel</button>
+            <p>Are you sure you want to delete this row?</p>
+            <div className="mt-4 flex justify-end">
+              <button
+                className="bg-red-500 text-white px-3 py-1 rounded-md"
+                onClick={confirmDelete}
+              >
+                Delete
+              </button>
+              <button
+                className="bg-gray-300 text-black px-3 py-1 rounded-md ml-2"
+                onClick={() => setRowToDelete(null)}
+              >
+                Cancel
+              </button>
             </div>
           </div>
         </div>
@@ -352,4 +316,4 @@ const TableOrders = (props) => {
   );
 };
 
-export default TableOrders;
+export default TableOrderReturns;

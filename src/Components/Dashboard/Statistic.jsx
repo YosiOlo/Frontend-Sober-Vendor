@@ -27,7 +27,7 @@ const CardList = () => {
   ];
 
   return (
-    <div className="basis-[25%] border-l-[1px] border-sky-800 ">
+    <div className=" w-[300px] border-l-[1px] border-sky-800 ">
       {cardData.map((card, index) => (
         <div
           key={index}
