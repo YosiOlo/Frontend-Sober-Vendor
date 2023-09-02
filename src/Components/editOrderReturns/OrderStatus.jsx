@@ -15,7 +15,7 @@ function OrderStatus() {
     setIsDropdownOpen(false);
   };
   return (
-    <div className="card bg-white rounded-lg w-[700px] mt-6 p-4">
+    <div className="card bg-white rounded-lg w-[700px] mt-6 p-4 break-words">
       <p className="font-semibold">Change return order status</p>
 
       <div className="flex space-x-2 mt-4">

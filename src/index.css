@@ -15,7 +15,7 @@
     @apply text-xl font-medium capitalize;
   }
 }
-*{
+*h1,h2,p{
   color: black;
 }
 

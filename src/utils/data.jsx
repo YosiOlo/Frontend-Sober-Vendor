@@ -90,4 +90,22 @@ const dataBar= () => [
     {id : "#10000270", OrderId : "Jul 28, 2023", Customer : "jusuf firmansyah", ProductItem: "Completed", Status: "Completed", CreatedAt : "Rp9.518.000",},
     {id : "#10000212", OrderId : "Jul 28, 2023", Customer : "jusuf firmansyah", ProductItem: "Pending", Status: "Processing", CreatedAt : "Rp9.518.000",},
   ];
-export { orders, dataBar, recentOrders, OrderReturns };
+
+  const Revenue =() =>[
+    {id : "#10000", Customer : "jusman parse", Amount : "Rp.18.000", PaymentMethod: "Bank Transfer", CreatedAt: "2023-08-07"},
+    {id : "#10001", Customer : "jusman parse", Amount : "Rp.18.000", PaymentMethod: "Bank Transfer", CreatedAt: "2023-08-07"},
+    {id : "#10002", Customer : "jusman parse", Amount : "Rp.18.000", PaymentMethod: "Bank Transfer", CreatedAt: "2023-08-07"},
+    {id : "#10003", Customer : "jusman parse", Amount : "Rp.18.000", PaymentMethod: "Bank Transfer", CreatedAt: "2023-08-07"},
+    {id : "#10004", Customer : "jusman parse", Amount : "Rp.18.000", PaymentMethod: "Bank Transfer", CreatedAt: "2023-08-07"},
+    {id : "#10005", Customer : "jusman parse", Amount : "Rp.18.000", PaymentMethod: "Bank Transfer", CreatedAt: "2023-08-07"},
+    {id : "#10006", Customer : "jusman parse", Amount : "Rp.18.000", PaymentMethod: "Bank Transfer", CreatedAt: "2023-08-07"},
+    {id : "#10007", Customer : "jusman parse", Amount : "Rp.18.000", PaymentMethod: "Bank Transfer", CreatedAt: "2023-08-07"},
+    {id : "#10008", Customer : "jusman parse", Amount : "Rp.18.000", PaymentMethod: "Bank Transfer", CreatedAt: "2023-08-07"},
+    {id : "#10009", Customer : "jusman parse", Amount : "Rp.18.000", PaymentMethod: "Bank Transfer", CreatedAt: "2023-08-07"},
+    {id : "#10010", Customer : "jusman parse", Amount : "Rp.18.000", PaymentMethod: "Bank Transfer", CreatedAt: "2023-08-07"},
+    {id : "#10011", Customer : "jusman parse", Amount : "Rp.18.000", PaymentMethod: "Bank Transfer", CreatedAt: "2023-08-07"},
+    {id : "#10012", Customer : "jusman parse", Amount : "Rp.18.000", PaymentMethod: "Bank Transfer", CreatedAt: "2023-08-07"},
+    {id : "#10013", Customer : "jusman parse", Amount : "Rp.18.000", PaymentMethod: "Bank Transfer", CreatedAt: "2023-08-07"},
+    {id : "#10014", Customer : "jusman parse", Amount : "Rp.18.000", PaymentMethod: "Bank Transfer", CreatedAt: "2023-08-07"},
+  ];
+export { orders, dataBar, recentOrders, OrderReturns, Revenue };

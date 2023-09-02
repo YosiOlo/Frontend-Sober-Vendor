@@ -8,7 +8,7 @@ function Index() {
     
   return (
     <div>
-      <div className="flex gap-5">
+      <div className="flex justify-center items-center gap-5 sm:flex-wrap md:flex-wrap lg:flex-wrap">
         <div className="dataOrder">
       <OrderInformation />
       <OrderStatus/>

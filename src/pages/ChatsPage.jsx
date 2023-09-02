@@ -4,9 +4,9 @@ import Index from "../Components/editOrderReturns";
 
 function ChatsPage() {
   return (
-    <div>
+    <div className="text-black">
       <TopBar title="Chats" />
-      <div className="p-4">
+      <div className="">
         
       <Index/>
       </div>
