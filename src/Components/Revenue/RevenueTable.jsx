@@ -1,4 +1,6 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import axios from "axios";
+import { formatDate } from "../../utils/api";
 import {
   Card,
   CardContent,
@@ -19,8 +21,10 @@ import { FaFileCsv } from "react-icons/fa";
 import { ArrowUpward, ArrowDownward, Search } from "@mui/icons-material";
 
 const RevenueTable = (props) => {
+  const [revenue, setRevenue] = useState([]);
+  const [loading, setLoading] = useState(false);
   const { DataRevenue } = props;
-  const [tableData, setTableData] = useState( DataRevenue);
+  const [tableData, setTableData] = useState(DataRevenue);
   const [orderBy, setOrderBy] = useState("");
   const [order, setOrder] = useState("asc");
   const [page, setPage] = useState(0);
@@ -29,6 +33,35 @@ const RevenueTable = (props) => {
   const [exportOpen, setexportOpen] = useState(false);
   const [rowToDelete, setRowToDelete] = useState(null); // Store the ID of the row to delete
 
+  useEffect(() => {
+    const apiUrl =
+      "https://kuro.asrofur.me/sober/api/transaction/vendor/revenue";
+    const bearerToken =
+      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYiLCJlbWFpbCI6InNvYmVyb2ZmaWNpYWxAZ21haWwuY29tIiwiaWF0IjoxNjkzOTgyNTc3LCJleHAiOjE2OTQwNjg5Nzd9.2wq7vcqUGEzV7wQhc8477DxYqyfONLdjaWtbJsYaics";
+
+    const fetchData = async () => {
+      try {
+        const response = await axios.get(apiUrl, {
+          headers: {
+            Authorization: `Bearer ${bearerToken}`,
+          },
+        });
+        setRevenue(response.data.data); // Fixed variable name here
+        setLoading(false); // Data is loaded
+        console.log("ttttttttttttttttttttttttt");
+        console.log(response.data);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+        setLoading(false); // Error occurred, set loading to false
+      }
+    };
+    fetchData();
+  }, []);
+  
+  const getPaymentMethod = (method) => {
+    if (method === 'bank_transfer')
+    return(<p className="text-[12px]">Bank Transfer</p>)
+  };
 
   const toggleExport = () => {
     setexportOpen(!exportOpen);
@@ -45,9 +78,8 @@ const RevenueTable = (props) => {
     setPage(0);
   };
 
-
   const sortedData = orderBy
-    ? [...tableData].sort((a, b) =>
+    ? [...revenue].sort((a, b) =>
         order === "asc"
           ? a[orderBy] < b[orderBy]
             ? -1
@@ -56,7 +88,7 @@ const RevenueTable = (props) => {
           ? -1
           : 1
       )
-    : tableData;
+    : revenue;
 
   const filteredData = sortedData.filter((row) =>
     Object.values(row).some((value) =>
@@ -73,7 +105,6 @@ const RevenueTable = (props) => {
     setPage(newPage);
   };
 
-  
   return (
     <Card className="mt-5 flex-wrap text-[12px]">
       <div className="p-2 flex flex-col md:flex-row justify-between">
@@ -142,11 +173,11 @@ const RevenueTable = (props) => {
                       ) : null}
                     </Button>
                   </TableCell>
-                  
+
                   <TableCell>
-                    <Button onClick={() => handleSort("Customer")}>
+                    <Button onClick={() => handleSort("customer")}>
                       Customer
-                      {orderBy === "Customer" ? (
+                      {orderBy === "customer" ? (
                         <span>
                           {order === "desc" ? (
                             <ArrowDownward />
@@ -161,6 +192,20 @@ const RevenueTable = (props) => {
                     <Button onClick={() => handleSort("Amount")}>
                       Amount
                       {orderBy === "Amount" ? (
+                        <span>
+                          {order === "desc" ? (
+                            <ArrowDownward />
+                          ) : (
+                            <ArrowUpward />
+                          )}
+                        </span>
+                      ) : null}
+                    </Button>
+                  </TableCell>
+                  <TableCell>
+                    <Button onClick={() => handleSort("ShippingAmount")}>
+                      Shipping Amount
+                      {orderBy === "ShippingAmount" ? (
                         <span>
                           {order === "desc" ? (
                             <ArrowDownward />
@@ -202,16 +247,16 @@ const RevenueTable = (props) => {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {paginatedData.map((row, index) => (
-                  <TableRow key={index}>
+                {paginatedData.map((revenue) => (
+                  <TableRow key={revenue.id}>
                     <TableCell className="whitespace-nowrap">
-                      {row.id}
+                      {revenue.id}
                     </TableCell>
-                    <TableCell>{row.Customer}</TableCell>
-                    <TableCell>{row.Amount}</TableCell>
-                    <TableCell>{row.PaymentMethod}</TableCell>
-                    <TableCell>{row.CreatedAt}</TableCell>
-                    
+                    <TableCell>{revenue.customer_order.name}</TableCell>
+                    <TableCell>{revenue.amount}</TableCell>
+                    <TableCell>{revenue.shipping_amount}</TableCell>
+                    <TableCell>{getPaymentMethod(revenue?.payment_order?.payment_channel)}</TableCell>
+                    <TableCell>{formatDate(revenue.customer_order.created_at)}</TableCell>
                   </TableRow>
                 ))}
               </TableBody>
@@ -229,11 +274,8 @@ const RevenueTable = (props) => {
               setPage(0);
             }}
           />
-          
         </div>
-        
       </CardContent>
-      
     </Card>
   );
 };

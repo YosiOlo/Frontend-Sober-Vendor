@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import axios from "axios";
 import {
   Card,
   CardContent,
@@ -17,8 +18,11 @@ import { MdOutlineArrowDropDown, MdEdit, MdDelete } from "react-icons/md";
 import { TbFileExport, TbReload } from "react-icons/tb";
 import { FaFileCsv } from "react-icons/fa";
 import { ArrowUpward, ArrowDownward, Search } from "@mui/icons-material";
+import { formatDate } from "../../utils/api";
 
 const TableOrderReturns = (props) => {
+  const [orderReturns, setOrderReturns] = useState([]);
+  const [loading,setLoading] = useState(false);
   const { DataOrderReturns } = props;
   const [tableData, setTableData] = useState(DataOrderReturns);
   const [orderBy, setOrderBy] = useState("");
@@ -29,73 +33,104 @@ const TableOrderReturns = (props) => {
   const [exportOpen, setexportOpen] = useState(false);
   const [rowToDelete, setRowToDelete] = useState(null); // Store the ID of the row to delete
 
+  useEffect(() => {
+    const apiUrl =
+      "https://kuro.asrofur.me/sober/api/transaction/vendor/returns?page&limit";
+    const bearerToken =
+      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYiLCJlbWFpbCI6InNvYmVyb2ZmaWNpYWxAZ21haWwuY29tIiwiaWF0IjoxNjkzOTgyNTc3LCJleHAiOjE2OTQwNjg5Nzd9.2wq7vcqUGEzV7wQhc8477DxYqyfONLdjaWtbJsYaics";
+
+    const fetchData = async () => {
+      try {
+        const response = await axios.get(apiUrl, {
+          headers: {
+            Authorization: `Bearer ${bearerToken}`,
+          },
+        });
+        setOrderReturns(response.data.data.rows); // Fixed variable name here
+        setLoading(false); // Data is loaded
+        console.log("ttttttttttttttttttttttttt");
+        console.log(response.data.data.rows);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+        setLoading(false); // Error occurred, set loading to false
+      }
+    };
+    fetchData();
+  }, []);
+
   const toggleExport = () => {
     setexportOpen(!exportOpen);
   };
 
+
+
   const getStatus = (Status) => {
-    if (Status === "Completed")
+    if (Status === "completed")
       return (
         <div className="card rounded-md bg-green-400 text-center text-xs font-semibold">
-          {Status}
+          Completed
         </div>
       );
-    if (Status === "Processing")
+    if (Status === "processing")
       return (
         <div className="card rounded-md bg-blue-400 text-center text-xs font-semibold">
-          {Status}
+          Processing
         </div>
       );
-    if (Status === "Pending")
+    if (Status === "pending")
       return (
         <div className="card rounded-md bg-yellow-400 text-center text-xs font-semibold">
-          {Status}
+          Pending
         </div>
       );
     else return <div className="badge badge-ghost">{Status}</div>;
   };
 
   const handleSort = (property) => {
-    const newOrder = orderBy === property && order === "asc" ? "desc" : "asc";
-    setOrder(newOrder);
+    const isAsc = orderBy === property && order === "asc";
+    setOrder(isAsc ? "desc" : "asc");
     setOrderBy(property);
   };
 
-  const handleSearch = (event) => {
-    const value = event.target.value;
-    setSearchTerm(value);
-    setPage(0);
-  };
-  const handleDelete = (rowId) => {
-    setRowToDelete(rowId);
-  };
-
-  const confirmDelete = () => {
-    if (rowToDelete) {
-      // Update the data and remove the row with the specified ID
-      const updatedData = tableData.filter((row) => row.id !== rowToDelete);
-      setTableData(updatedData);
-      setRowToDelete(null); // Clear the rowToDelete
-    }
-  };
-
   const sortedData = orderBy
-    ? [...tableData].sort((a, b) =>
-        order === "asc"
-          ? a[orderBy] < b[orderBy]
-            ? -1
-            : 1
-          : b[orderBy] < a[orderBy]
-          ? -1
-          : 1
-      )
-    : tableData;
+  ? [...orderReturns].sort((a, b) => {
+      const valueA = a[orderBy];
+      const valueB = b[orderBy];
+      const comparison = order === "asc" ? -1 : 1;
 
-  const filteredData = sortedData.filter((row) =>
-    Object.values(row).some((value) =>
-      value.toString().toLowerCase().includes(searchTerm.toLowerCase())
-    )
-  );
+      // Perform the comparison based on data types (numbers or strings)
+      if (typeof valueA === "number" && typeof valueB === "number") {
+        return (valueA - valueB) * comparison;
+      } else {
+        return valueA.localeCompare(valueB) * comparison;
+      }
+    })
+  : orderReturns;
+
+
+    const handleSearch = (event) => {
+      const value = event.target.value;
+      setSearchTerm(value);
+      setPage(0); // Reset the page to the first page when searching
+    };
+    
+
+    const filteredData = sortedData.filter((row) => {
+      const valuesToSearch = [
+        row.id.toString(),
+        row.ec_order?.code,
+        row.ec_order?.customer_order?.name,
+        row.ec_order?.order_product?.qty.toString(),
+        row.ec_order?.status,
+        formatDate(row.created_at), // Assuming formatDate returns a string
+      ];
+    
+      // Check if any value contains the search term
+      return valuesToSearch.some((value) =>
+        value.toLowerCase().includes(searchTerm.toLowerCase())
+      );
+    });
+    
 
   const paginatedData = filteredData.slice(
     page * rowsPerPage,
@@ -248,16 +283,16 @@ const TableOrderReturns = (props) => {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {paginatedData.map((row, index) => (
-                  <TableRow key={index}>
+                {paginatedData.map((orderReturn) => (
+                  <TableRow key={orderReturn.id}>
                     <TableCell className="whitespace-nowrap">
-                      {row.id}
+                      {orderReturn.id}
                     </TableCell>
-                    <TableCell>{row.OrderId}</TableCell>
-                    <TableCell>{row.Customer}</TableCell>
-                    <TableCell>{row.ProductItem}</TableCell>
-                    <TableCell>{getStatus(row.Status)}</TableCell>
-                    <TableCell>{row.CreatedAt}</TableCell>
+                    <TableCell>{orderReturn.ec_order?.code}</TableCell>
+                    <TableCell>{orderReturn?.ec_order?.customer_order?.name}</TableCell>
+                    <TableCell >{orderReturn?.ec_order?.order_product?.qty}</TableCell>
+                    <TableCell>{getStatus(orderReturn?.ec_order?.status)}</TableCell>
+                    <TableCell>{formatDate(orderReturn?.created_at)}</TableCell>
                     <TableCell>
                       <div className="flex gap-2">
                         <button className="bg-blue-500 text-white px-2 py-1 rounded-md">
@@ -291,27 +326,7 @@ const TableOrderReturns = (props) => {
           />
         </div>
       </CardContent>
-      {rowToDelete && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 text-[14px]">
-          <div className="bg-white p-6 rounded-lg">
-            <p>Are you sure you want to delete this row?</p>
-            <div className="mt-4 flex justify-end">
-              <button
-                className="bg-red-500 text-white px-3 py-1 rounded-md"
-                onClick={confirmDelete}
-              >
-                Delete
-              </button>
-              <button
-                className="bg-gray-300 text-black px-3 py-1 rounded-md ml-2"
-                onClick={() => setRowToDelete(null)}
-              >
-                Cancel
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
+      
     </Card>
   );
 };

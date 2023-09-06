@@ -105,7 +105,21 @@ function AddCoupons() {
           </div>
         )}
         {selectedOption === "free-shipping" && (
-          <p className="text-green-600">Free shipping option selected.</p>
+          <div className="mb-4">
+          <label
+            htmlFor="free-shipping"
+            className="block font-medium text-gray-700"
+          >
+            when shipping fee less than
+          </label>
+          <input
+            type="text"
+            id="free-shipping"
+            value={inputValue}
+            onChange={handleInputChange}
+            className="block w-full mt-1 p-2 border bg-[#f9f9f9] border-gray-300 rounded-md focus:ring focus:ring-blue-200 focus:ring-opacity-50"
+          />
+        </div>
         )}
       </div>
         

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Card,
   CardContent,
@@ -17,99 +17,138 @@ import { MdOutlineArrowDropDown, MdEdit, MdDelete } from "react-icons/md";
 import { TbFileExport, TbReload } from "react-icons/tb";
 import { FaFileCsv } from "react-icons/fa";
 import { ArrowUpward, ArrowDownward, Search } from "@mui/icons-material";
+import axios from "axios";
+import { formatDate } from "../utils/api";
 
-const TableOrders = (props) => {
-  const { DataOrders } = props;
-  const [tableData, setTableData] = useState(DataOrders);
-  const [orderBy, setOrderBy] = useState("");
+const TableOrders = () => {
+  const [orderBy, setOrderBy] = useState("id");
   const [order, setOrder] = useState("asc");
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [searchTerm, setSearchTerm] = useState("");
   const [exportOpen, setexportOpen] = useState(false);
   const [rowToDelete, setRowToDelete] = useState(null); // Store the ID of the row to delete
+  const [transactions, setTransactions] = useState([]);
+  const [loading, setLoading] = useState(true);
 
-  const toggleExport = () => {
-    setexportOpen(!exportOpen);
-  };
+  useEffect(() => {
+    const apiUrl =
+      "https://kuro.asrofur.me/sober/api/transaction/vendor?limit=30";
+    const bearerToken =
+      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYiLCJlbWFpbCI6InNvYmVyb2ZmaWNpYWxAZ21haWwuY29tIiwiaWF0IjoxNjkzODk3ODg1LCJleHAiOjE2OTM5ODQyODV9.cL1Cyf6Jjr28tlb1jBLlQXNlgI1O1wglfrSlg10Ajp4";
+
+    const fetchData = async () => {
+      try {
+        const response = await axios.get(apiUrl, {
+          headers: {
+            Authorization: `Bearer ${bearerToken}`,
+          },
+        });
+
+        setTransactions(response?.data.data.rows);
+        setLoading(false); // Data is loaded
+        console.log("ttttttttttttttttttttttttt");
+        console.log(response.data.data.rows);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+        setLoading(false); // Error occurred, set loading to false
+      }
+    };
+
+    fetchData();
+  }, []);
+
   const getPaymentStatus = (PaymentStatus) => {
-    if (PaymentStatus === "Completed")
+    if (PaymentStatus === "completed")
       return (
         <div className="card rounded-md bg-green-400 text-center text-xs font-semibold">
-          {PaymentStatus}
+          Completed
         </div>
       );
-    if (PaymentStatus === "Pending")
+    if (PaymentStatus === "pending")
       return (
         <div className="card rounded-md bg-yellow-400 text-center text-xs font-semibold">
-          {PaymentStatus}
+          Pending
         </div>
       );
     else return <div className="badge badge-ghost">{PaymentStatus}</div>;
   };
+
+  const toggleExport = () => {
+    setexportOpen(!exportOpen);
+  };
   const getStatus = (Status) => {
-    if (Status === "Completed")
+    if (Status === "completed")
       return (
         <div className="card rounded-md bg-green-400 text-center text-xs font-semibold">
           {Status}
         </div>
       );
-    if (Status === "Processed")
+    if (Status === "processing")
       return (
         <div className="card rounded-md bg-blue-400 text-center text-xs font-semibold">
           {Status}
         </div>
       );
-    if (Status === "Pending")
+    if (Status === "pending")
       return (
         <div className="card rounded-md bg-yellow-400 text-center text-xs font-semibold">
           {Status}
         </div>
       );
-    else return <div className="badge badge-ghost">{PaymentStatus}</div>;
+  };
+
+  const getPaymentMethod = (method) => {
+    if (method === "bank_transfer")
+      return <p className="text-[12px]">Bank Transfer</p>;
+    if (method === "virtual_account")
+      return <p className="text-[12px]">Virtual Account</p>;
+    else return <p className="text-[12px]">{method}</p>;
   };
 
   const handleSort = (property) => {
-    const newOrder = orderBy === property && order === "asc" ? "desc" : "asc";
-    setOrder(newOrder);
+    const isAsc = orderBy === property && order === "asc";
+    setOrder(isAsc ? "desc" : "asc");
     setOrderBy(property);
   };
+
+  const sortedData = [...transactions].sort((a, b) => {
+    const valueA = a[orderBy];
+    const valueB = b[orderBy];
+
+    if (typeof valueA === "number" && typeof valueB === "number") {
+      return order === "asc" ? valueA - valueB : valueB - valueA;
+    } else if (typeof valueA === "string" && typeof valueB === "string") {
+      return order === "asc"
+        ? valueA.localeCompare(valueB)
+        : valueB.localeCompare(valueA);
+    } else {
+      return 0; // Handle other data types or return 0 if no data type matches
+    }
+  });
 
   const handleSearch = (event) => {
     const value = event.target.value;
     setSearchTerm(value);
-    setPage(0);
+    setPage(0); // Reset the page to the first page when searching
   };
 
-  const sortedData = orderBy
-    ? [...tableData].sort((a, b) =>
-        order === "asc"
-          ? a[orderBy] < b[orderBy]
-            ? -1
-            : 1
-          : b[orderBy] < a[orderBy]
-          ? -1
-          : 1
-      )
-    : tableData;
-  const handleDelete = (rowId) => {
-    setRowToDelete(rowId);
-  };
+  const filteredData = sortedData.filter((row) => {
+    const valuesToSearch = [
+      row.id.toString(),
+      row.order_addresses?.name,
+      row?.amount,
+      row?.shipping_amount,
+      row?.payment_order?.payment_channel,
+      row?.payment_order?.status,
+      formatDate(row.created_at), // Assuming formatDate returns a string
+    ];
 
-  const confirmDelete = () => {
-    if (rowToDelete) {
-      // Update the data and remove the row with the specified ID
-      const updatedData = tableData.filter((row) => row.id !== rowToDelete);
-      setTableData(updatedData);
-      setRowToDelete(null); // Clear the rowToDelete
-    }
-  };
-
-  const filteredData = sortedData.filter((row) =>
-    Object.values(row).some((value) =>
-      value.toString().toLowerCase().includes(searchTerm.toLowerCase())
-    )
-  );
+    // Check if any value contains the search term
+    return valuesToSearch.some((value) =>
+      value.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+  });
 
   const paginatedData = filteredData.slice(
     page * rowsPerPage,
@@ -118,6 +157,51 @@ const TableOrders = (props) => {
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
+  };
+
+  const confirmDelete = async () => {
+    if (rowToDelete !== null) {
+      await deleteData(rowToDelete);
+    }
+    setRowToDelete(null); // Clear the rowToDelete
+  };
+
+  
+  const deleteData = async (rowId) => {
+    try {
+      const apiUrl = `https://kuro.asrofur.me/sober/api/transaction/vendor/${rowId}`;
+      const bearerToken =
+        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYiLCJlbWFpbCI6InNvYmVyb2ZmaWNpYWxAZ21haWwuY29tIiwiaWF0IjoxNjkzODk3ODg1LCJleHAiOjE2OTM5ODQyODV9.cL1Cyf6Jjr28tlb1jBLlQXNlgI1O1wglfrSlg10Ajp4";
+  
+      const response = await axios.delete(apiUrl, {
+        headers: {
+          Authorization: `Bearer ${bearerToken}`,
+        },
+      });
+  
+      if (response.status === 200) {
+        console.log("Success! Data deleted from API.");
+        console.log("Response data:", response.data); // Cetak respons data
+        // Data berhasil dihapus dari API, sekarang update state
+        const updatedData = transactions.filter((row) => row.id !== rowId);
+        setTransactions(updatedData);
+        setRowToDelete(null); // Reset rowToDelete setelah berhasil dihapus
+      } else {
+        console.error("Failed to delete data from API. Status:", response.status);
+      }
+    } catch (error) {
+      console.error("Error deleting data:", error);
+  
+      if (error.response) {
+        console.error("Response data:", error.response.data);
+      }
+    }
+  };
+  
+  
+
+  const handleDeleteClick = (rowId) => {
+    setRowToDelete(rowId); // Set ID baris yang akan dihapus saat tombol "Delete" pada baris diklik
   };
 
   return (
@@ -202,6 +286,7 @@ const TableOrders = (props) => {
                       ) : null}
                     </Button>
                   </TableCell>
+
                   <TableCell>
                     <Button onClick={() => handleSort("Amount")}>
                       Amount
@@ -290,18 +375,26 @@ const TableOrders = (props) => {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {paginatedData.map((row, index) => (
-                  <TableRow key={index}>
+                {paginatedData.map((transaction) => (
+                  <TableRow key={transaction?.id}>
                     <TableCell className="whitespace-nowrap">
-                      {row.id}
+                      {transaction?.id}
                     </TableCell>
-                    <TableCell>{row.Customer}</TableCell>
-                    <TableCell>{row.Amount}</TableCell>
-                    <TableCell>{row.ShippingAmount}</TableCell>
-                    <TableCell>{row.PaymentMethod}</TableCell>
-                    <TableCell>{getPaymentStatus(row.PaymentStatus)}</TableCell>
-                    <TableCell>{getStatus(row.Status)}</TableCell>
-                    <TableCell>{row.CreatedAt}</TableCell>
+                    <TableCell>{transaction?.order_addresses?.name}</TableCell>
+                    <TableCell>{transaction?.amount}</TableCell>
+                    <TableCell>{transaction?.shipping_amount}</TableCell>
+                    <TableCell>
+                      {getPaymentMethod(
+                        transaction?.payment_order?.payment_channel
+                      )}
+                    </TableCell>
+                    <TableCell>
+                      {getPaymentStatus(transaction?.payment_order?.status)}
+                    </TableCell>
+                    <TableCell>{getStatus(transaction?.status)}</TableCell>
+                    <TableCell>
+                      {formatDate(transaction?.payment_order?.created_at)}
+                    </TableCell>
                     <TableCell>
                       <div className="flex gap-2">
                         <button
@@ -312,7 +405,7 @@ const TableOrders = (props) => {
                         </button>
                         <button
                           className="bg-red-500 text-white px-2 py-1 rounded-md"
-                          onClick={() => handleDelete(row.id)} // Implement the handleDelete function
+                          onClick={() => handleDeleteClick(transaction.id)} // Implement the handleDelete function
                         >
                           <MdDelete />
                         </button>
@@ -342,8 +435,18 @@ const TableOrders = (props) => {
           <div className="bg-white p-6 rounded-lg">
             <p>Are you sure, you want to delete this row??</p>
             <div className="mt-4 flex justify-end gap-3">
-              <button className="bg-red-600 text-white px-3 py-1 rounded-md" onClick={confirmDelete}>delete</button>
-              <button className="bg-gray-300 text-black px-3 py-1 rounded-md" onClick={()=> setRowToDelete(null)}>Cancel</button>
+              <button
+                className="bg-red-600 text-white px-3 py-1 rounded-md"
+                onClick={confirmDelete}
+              >
+                delete
+              </button>
+              <button
+                className="bg-gray-300 text-black px-3 py-1 rounded-md"
+                onClick={() => setRowToDelete(null)}
+              >
+                Cancel
+              </button>
             </div>
           </div>
         </div>

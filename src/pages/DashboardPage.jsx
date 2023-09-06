@@ -11,7 +11,7 @@ function DashboardPage() {
   return (
     <div>
       <TopBar title="Dashboard" />
-      <div className="flex flex-wrap sm: flex-wrap ">
+      <div className="flex flex-wrap">
       <Barchart/>
       <ChartTwo/>
       <Statistic/>
