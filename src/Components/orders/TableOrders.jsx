@@ -18,7 +18,7 @@ import { TbFileExport, TbReload } from "react-icons/tb";
 import { FaFileCsv } from "react-icons/fa";
 import { ArrowUpward, ArrowDownward, Search } from "@mui/icons-material";
 import axios from "axios";
-import { formatDate } from "../utils/api";
+import { formatDate } from "../../utils/api";
 
 const TableOrders = () => {
   const [orderBy, setOrderBy] = useState("id");
@@ -29,13 +29,12 @@ const TableOrders = () => {
   const [exportOpen, setexportOpen] = useState(false);
   const [rowToDelete, setRowToDelete] = useState(null); // Store the ID of the row to delete
   const [transactions, setTransactions] = useState([]);
-  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const apiUrl =
       "https://kuro.asrofur.me/sober/api/transaction/vendor?limit=30";
     const bearerToken =
-      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYiLCJlbWFpbCI6InNvYmVyb2ZmaWNpYWxAZ21haWwuY29tIiwiaWF0IjoxNjkzODk3ODg1LCJleHAiOjE2OTM5ODQyODV9.cL1Cyf6Jjr28tlb1jBLlQXNlgI1O1wglfrSlg10Ajp4";
+      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYiLCJlbWFpbCI6InNvYmVyb2ZmaWNpYWxAZ21haWwuY29tIiwiaWF0IjoxNjkzOTgyNTc3LCJleHAiOjE2OTQwNjg5Nzd9.2wq7vcqUGEzV7wQhc8477DxYqyfONLdjaWtbJsYaics";
 
     const fetchData = async () => {
       try {
@@ -171,7 +170,7 @@ const TableOrders = () => {
     try {
       const apiUrl = `https://kuro.asrofur.me/sober/api/transaction/vendor/${rowId}`;
       const bearerToken =
-        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYiLCJlbWFpbCI6InNvYmVyb2ZmaWNpYWxAZ21haWwuY29tIiwiaWF0IjoxNjkzODk3ODg1LCJleHAiOjE2OTM5ODQyODV9.cL1Cyf6Jjr28tlb1jBLlQXNlgI1O1wglfrSlg10Ajp4";
+        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYiLCJlbWFpbCI6InNvYmVyb2ZmaWNpYWxAZ21haWwuY29tIiwiaWF0IjoxNjkzOTgyNTc3LCJleHAiOjE2OTQwNjg5Nzd9.2wq7vcqUGEzV7wQhc8477DxYqyfONLdjaWtbJsYaics";
   
       const response = await axios.delete(apiUrl, {
         headers: {
@@ -242,10 +241,10 @@ const TableOrders = () => {
               </div>
             )}
           </div>
-          <button className="bg-[#36C6D3] h-[2.1rem] w-full md:w-[4.5rem] rounded-lg mt-2 md:mt-0">
+          <button className="bg-[#36C6D3] h-[2.5rem] w-full md:w-[4.5rem] rounded-lg mt-2 md:mt-0">
             <a className="flex  p-2" href="">
               {" "}
-              <TbReload className=" mr-[3px] text-lg" />
+              <TbReload className="  text-lg" />
               Reload
             </a>
           </button>

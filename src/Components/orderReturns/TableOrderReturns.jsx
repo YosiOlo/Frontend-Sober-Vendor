@@ -22,9 +22,6 @@ import { formatDate } from "../../utils/api";
 
 const TableOrderReturns = (props) => {
   const [orderReturns, setOrderReturns] = useState([]);
-  const [loading,setLoading] = useState(false);
-  const { DataOrderReturns } = props;
-  const [tableData, setTableData] = useState(DataOrderReturns);
   const [orderBy, setOrderBy] = useState("");
   const [order, setOrder] = useState("asc");
   const [page, setPage] = useState(0);
@@ -52,7 +49,6 @@ const TableOrderReturns = (props) => {
         console.log(response.data.data.rows);
       } catch (error) {
         console.error("Error fetching data:", error);
-        setLoading(false); // Error occurred, set loading to false
       }
     };
     fetchData();
@@ -61,8 +57,6 @@ const TableOrderReturns = (props) => {
   const toggleExport = () => {
     setexportOpen(!exportOpen);
   };
-
-
 
   const getStatus = (Status) => {
     if (Status === "completed")
@@ -93,44 +87,41 @@ const TableOrderReturns = (props) => {
   };
 
   const sortedData = orderBy
-  ? [...orderReturns].sort((a, b) => {
-      const valueA = a[orderBy];
-      const valueB = b[orderBy];
-      const comparison = order === "asc" ? -1 : 1;
+    ? [...orderReturns].sort((a, b) => {
+        const valueA = a[orderBy];
+        const valueB = b[orderBy];
+        const comparison = order === "asc" ? -1 : 1;
 
-      // Perform the comparison based on data types (numbers or strings)
-      if (typeof valueA === "number" && typeof valueB === "number") {
-        return (valueA - valueB) * comparison;
-      } else {
-        return valueA.localeCompare(valueB) * comparison;
-      }
-    })
-  : orderReturns;
+        // Perform the comparison based on data types (numbers or strings)
+        if (typeof valueA === "number" && typeof valueB === "number") {
+          return (valueA - valueB) * comparison;
+        } else {
+          return valueA.localeCompare(valueB) * comparison;
+        }
+      })
+    : orderReturns;
 
+  const handleSearch = (event) => {
+    const value = event.target.value;
+    setSearchTerm(value);
+    setPage(0); // Reset the page to the first page when searching
+  };
 
-    const handleSearch = (event) => {
-      const value = event.target.value;
-      setSearchTerm(value);
-      setPage(0); // Reset the page to the first page when searching
-    };
-    
+  const filteredData = sortedData.filter((row) => {
+    const valuesToSearch = [
+      row.id.toString(),
+      row.ec_order?.code,
+      row.ec_order?.customer_order?.name,
+      row.ec_order?.order_product?.qty.toString(),
+      row.ec_order?.status,
+      formatDate(row.created_at), // Assuming formatDate returns a string
+    ];
 
-    const filteredData = sortedData.filter((row) => {
-      const valuesToSearch = [
-        row.id.toString(),
-        row.ec_order?.code,
-        row.ec_order?.customer_order?.name,
-        row.ec_order?.order_product?.qty.toString(),
-        row.ec_order?.status,
-        formatDate(row.created_at), // Assuming formatDate returns a string
-      ];
-    
-      // Check if any value contains the search term
-      return valuesToSearch.some((value) =>
-        value.toLowerCase().includes(searchTerm.toLowerCase())
-      );
-    });
-    
+    // Check if any value contains the search term
+    return valuesToSearch.some((value) =>
+      value.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+  });
 
   const paginatedData = filteredData.slice(
     page * rowsPerPage,
@@ -139,6 +130,50 @@ const TableOrderReturns = (props) => {
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
+  };
+  const confirmDelete = async () => {
+    if (rowToDelete !== null) {
+      await deleteData(rowToDelete);
+    }
+    setRowToDelete(null); // Clear the rowToDelete
+  };
+
+  const deleteData = async (rowId) => {
+    try {
+      const apiUrl = `https://kuro.asrofur.me/sober/api/transaction/vendor/return/${rowId}`;
+      const bearerToken =
+        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYiLCJlbWFpbCI6InNvYmVyb2ZmaWNpYWxAZ21haWwuY29tIiwiaWF0IjoxNjkzOTgyNTc3LCJleHAiOjE2OTQwNjg5Nzd9.2wq7vcqUGEzV7wQhc8477DxYqyfONLdjaWtbJsYaics";
+
+      const response = await axios.delete(apiUrl, {
+        headers: {
+          Authorization: `Bearer ${bearerToken}`,
+        },
+      });
+
+      if (response.status === 200) {
+        console.log("Success! Data deleted from API.");
+        console.log("Response data:", response.data); // Cetak respons data
+        // Data berhasil dihapus dari API, sekarang update state
+        const updatedData = orderReturns.filter((row) => row.id !== rowId);
+        setTransactions(updatedData);
+        setRowToDelete(null); // Reset rowToDelete setelah berhasil dihapus
+      } else {
+        console.error(
+          "Failed to delete data from API. Status:",
+          response.status
+        );
+      }
+    } catch (error) {
+      console.error("Error deleting data:", error);
+
+      if (error.response) {
+        console.error("Response data:", error.response.data);
+      }
+    }
+  };
+
+  const handleDeleteClick = (rowId) => {
+    setRowToDelete(rowId); // Set ID baris yang akan dihapus saat tombol "Delete" pada baris diklik
   };
 
   return (
@@ -289,9 +324,15 @@ const TableOrderReturns = (props) => {
                       {orderReturn.id}
                     </TableCell>
                     <TableCell>{orderReturn.ec_order?.code}</TableCell>
-                    <TableCell>{orderReturn?.ec_order?.customer_order?.name}</TableCell>
-                    <TableCell >{orderReturn?.ec_order?.order_product?.qty}</TableCell>
-                    <TableCell>{getStatus(orderReturn?.ec_order?.status)}</TableCell>
+                    <TableCell>
+                      {orderReturn?.ec_order?.customer_order?.name}
+                    </TableCell>
+                    <TableCell>
+                      {orderReturn?.ec_order?.order_product?.qty}
+                    </TableCell>
+                    <TableCell>
+                      {getStatus(orderReturn?.ec_order?.status)}
+                    </TableCell>
                     <TableCell>{formatDate(orderReturn?.created_at)}</TableCell>
                     <TableCell>
                       <div className="flex gap-2">
@@ -301,7 +342,7 @@ const TableOrderReturns = (props) => {
 
                         <button
                           className="bg-red-500 text-white px-2 py-1 rounded-md"
-                          onClick={() => handleDelete(row.id)}
+                          onClick={() => handleDeleteClick(orderReturn.id)}
                         >
                           <MdDelete />
                         </button>
@@ -326,7 +367,27 @@ const TableOrderReturns = (props) => {
           />
         </div>
       </CardContent>
-      
+      {rowToDelete && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 text-[14]">
+          <div className="bg-white p-6 rounded-lg">
+            <p>Are you sure, you want to delete this row??</p>
+            <div className="mt-4 flex justify-end gap-3">
+              <button
+                className="bg-red-600 text-white px-3 py-1 rounded-md"
+                onClick={confirmDelete}
+              >
+                delete
+              </button>
+              <button
+                className="bg-gray-300 text-black px-3 py-1 rounded-md"
+                onClick={() => setRowToDelete(null)}
+              >
+                Cancel
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </Card>
   );
 };

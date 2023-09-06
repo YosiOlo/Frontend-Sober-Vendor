@@ -4,13 +4,12 @@ import TableOrderReturns from '../Components/orderReturns/TableOrderReturns';
 
 import { OrderReturns } from "../utils/data";
 function OrderReturnsPage() {
-  const dataOrderReturns = OrderReturns();
   return (
     <div >
       <TopBar title="OrderReturns"/>
       <div className="p-5">
         
-      <TableOrderReturns DataOrderReturns={dataOrderReturns}/>
+      <TableOrderReturns />
       </div>
     </div>
   )
