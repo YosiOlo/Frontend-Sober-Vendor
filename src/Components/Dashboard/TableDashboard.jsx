@@ -21,7 +21,7 @@ import { ArrowUpward, ArrowDownward, Search } from "@mui/icons-material";
 
 const TableDashboard = (props) => {
   const { DataDashboard } = props;
-  const [tableData, setTableData] = useState( DataDashboard);
+  const [tableData, setTableData] = useState(DataDashboard);
   const [orderBy, setOrderBy] = useState("");
   const [order, setOrder] = useState("asc");
   const [page, setPage] = useState(0);
@@ -29,7 +29,6 @@ const TableDashboard = (props) => {
   const [searchTerm, setSearchTerm] = useState("");
   const [exportOpen, setexportOpen] = useState(false);
   const [rowToDelete, setRowToDelete] = useState(null); // Store the ID of the row to delete
-
 
   const toggleExport = () => {
     setexportOpen(!exportOpen);
@@ -95,7 +94,6 @@ const TableDashboard = (props) => {
     }
   };
 
-
   const sortedData = orderBy
     ? [...tableData].sort((a, b) =>
         order === "asc"
@@ -124,33 +122,30 @@ const TableDashboard = (props) => {
   };
 
   // State untuk mengatur form edit
-const [editFormOpen, setEditFormOpen] = useState(false);
-const [editedRowData, setEditedRowData] = useState(null);
+  const [editFormOpen, setEditFormOpen] = useState(false);
+  const [editedRowData, setEditedRowData] = useState(null);
 
-// Fungsi untuk membuka form edit
-const handleEdit = (rowId) => {
-  const rowToEdit = tableData.find((row) => row.id === rowId);
-  setEditedRowData(rowToEdit);
-  setEditFormOpen(true);
-};
+  // Fungsi untuk membuka form edit
+  const handleEdit = (rowId) => {
+    const rowToEdit = tableData.find((row) => row.id === rowId);
+    setEditedRowData(rowToEdit);
+    setEditFormOpen(true);
+  };
 
-// Fungsi untuk menutup form edit
-const handleEditFormClose = () => {
-  setEditFormOpen(false);
-  setEditedRowData(null);
-};
+  // Fungsi untuk menutup form edit
+  const handleEditFormClose = () => {
+    setEditFormOpen(false);
+    setEditedRowData(null);
+  };
 
-// Fungsi untuk menyimpan perubahan dari form edit
-const handleEditFormSave = (editedData) => {
-  const updatedTableData = tableData.map((row) =>
-    row.id === editedData.id ? editedData : row
-  );
-  setTableData(updatedTableData);
-  handleEditFormClose();
-};
-
-
-
+  // Fungsi untuk menyimpan perubahan dari form edit
+  const handleEditFormSave = (editedData) => {
+    const updatedTableData = tableData.map((row) =>
+      row.id === editedData.id ? editedData : row
+    );
+    setTableData(updatedTableData);
+    handleEditFormClose();
+  };
 
   return (
     <Card className="mt-5 flex-wrap text-[12px]">
@@ -190,7 +185,7 @@ const handleEditFormSave = (editedData) => {
               </div>
             )}
           </div>
-          <button className="bg-[#36C6D3] h-[2.1rem] w-full md:w-[4.5rem] rounded-lg mt-2 md:mt-0">
+          <button className="bg-[#36C6D3] h-[2.5rem] w-full md:w-[4.5rem] rounded-lg mt-2 md:mt-0">
             <a className="flex  p-2" href="">
               {" "}
               <TbReload className=" mr-[3px] text-lg" />
@@ -305,13 +300,13 @@ const handleEditFormSave = (editedData) => {
                     <TableCell>{getStatus(row.Status)}</TableCell>
                     <TableCell>{row.Total}</TableCell>
                     <TableCell>
-                          <div className="flex gap-2">
-                            <button
-                              className="bg-blue-500 text-white px-2 py-1 rounded-md"
-                              onClick={() => handleEdit(row.id)}
-                            >
-                              <MdEdit />
-                            </button>
+                      <div className="flex gap-2">
+                        <button
+                          className="bg-blue-500 text-white px-2 py-1 rounded-md"
+                          onClick={() => handleEdit(row.id)}
+                        >
+                          <MdEdit />
+                        </button>
 
                         <button
                           className="bg-red-500 text-white px-2 py-1 rounded-md"
@@ -339,15 +334,14 @@ const handleEditFormSave = (editedData) => {
             }}
           />
           {editFormOpen && (
-          <EditForm
-            rowData={editedRowData}
-            open={editFormOpen}
-            onClose={handleEditFormClose}
-            onSave={handleEditFormSave}
-          />
-        )}
+            <EditForm
+              rowData={editedRowData}
+              open={editFormOpen}
+              onClose={handleEditFormClose}
+              onSave={handleEditFormSave}
+            />
+          )}
         </div>
-        
       </CardContent>
       {rowToDelete && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">

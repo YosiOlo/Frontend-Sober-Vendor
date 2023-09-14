@@ -34,7 +34,7 @@ const TableOrderReturns = (props) => {
     const apiUrl =
       "https://kuro.asrofur.me/sober/api/transaction/vendor/returns?page&limit";
     const bearerToken =
-      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYiLCJlbWFpbCI6InNvYmVyb2ZmaWNpYWxAZ21haWwuY29tIiwiaWF0IjoxNjkzOTgyNTc3LCJleHAiOjE2OTQwNjg5Nzd9.2wq7vcqUGEzV7wQhc8477DxYqyfONLdjaWtbJsYaics";
+      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYiLCJlbWFpbCI6InNvYmVyb2ZmaWNpYWxAZ21haWwuY29tIiwiaWF0IjoxNjk0NjczMTE0LCJleHAiOjE2OTQ3NTk1MTR9.vG5ae7OWAPxWdhFF91uzpDNngRHdCB4WOsTePN1cV0Q";
 
     const fetchData = async () => {
       try {
@@ -142,7 +142,7 @@ const TableOrderReturns = (props) => {
     try {
       const apiUrl = `https://kuro.asrofur.me/sober/api/transaction/vendor/return/${rowId}`;
       const bearerToken =
-        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYiLCJlbWFpbCI6InNvYmVyb2ZmaWNpYWxAZ21haWwuY29tIiwiaWF0IjoxNjkzOTgyNTc3LCJleHAiOjE2OTQwNjg5Nzd9.2wq7vcqUGEzV7wQhc8477DxYqyfONLdjaWtbJsYaics";
+        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYiLCJlbWFpbCI6InNvYmVyb2ZmaWNpYWxAZ21haWwuY29tIiwiaWF0IjoxNjk0NjczMTE0LCJleHAiOjE2OTQ3NTk1MTR9.vG5ae7OWAPxWdhFF91uzpDNngRHdCB4WOsTePN1cV0Q";
 
       const response = await axios.delete(apiUrl, {
         headers: {
@@ -214,10 +214,10 @@ const TableOrderReturns = (props) => {
               </div>
             )}
           </div>
-          <button className="bg-[#36C6D3] h-[2.1rem] w-full md:w-[4.5rem] rounded-lg mt-2 md:mt-0">
+          <button className="bg-[#36C6D3] h-[2.5rem] w-full md:w-[4.5rem] rounded-lg mt-2 md:mt-0">
             <a className="flex  p-2" href="">
               {" "}
-              <TbReload className=" mr-[3px] text-lg" />
+              <TbReload className=" text-lg" />
               Reload
             </a>
           </button>

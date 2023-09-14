@@ -11,6 +11,8 @@ import RevenuePage from "./pages/RevenuePage";
 import ReviewsPage from "./pages/ReviewsPage";
 import WithdrawalsPage from "./pages/WIthdrawalsPage";
 import SettingsPage from "./pages/SettingsPage";
+import AddProductIndex from "./Components/Products/AddProducts/AddProductIndex";
+import AddCouponsIndex from "./Components/Coupons/AddCoupons/AddCouponsIndex";
 
 const App = () => {
   return (
@@ -27,6 +29,8 @@ const App = () => {
         <Route path="/VenWithdrawals" element={<WithdrawalsPage />} />
         <Route path="/VenReviews" element={<ReviewsPage />} />
         <Route path="/VenSettings" element={<SettingsPage />} />
+        <Route path="/VenCreateProduct" element={<AddProductIndex />} />
+        <Route path="/VenCreateCoupons" element={<AddCouponsIndex />} />
       </Routes>
     </RootLayout>
   );

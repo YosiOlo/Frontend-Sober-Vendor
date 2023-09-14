@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { formatDate } from "../../utils/api";
 import {
   Card,
   CardContent,
@@ -19,11 +18,10 @@ import { MdOutlineArrowDropDown, MdEdit, MdDelete } from "react-icons/md";
 import { TbFileExport, TbReload } from "react-icons/tb";
 import { FaFileCsv } from "react-icons/fa";
 import { ArrowUpward, ArrowDownward, Search } from "@mui/icons-material";
+import { formatDate } from "../../utils/api";
 
-const RevenueTable = (props) => {
-  const [revenue, setRevenue] = useState([]);
-  const { DataRevenue } = props;
-  const [tableData, setTableData] = useState(DataRevenue);
+const WithdrawalsTable = () => {
+  const [withdrawals, setWithdrawals] = useState([]);
   const [orderBy, setOrderBy] = useState("");
   const [order, setOrder] = useState("asc");
   const [page, setPage] = useState(0);
@@ -34,7 +32,7 @@ const RevenueTable = (props) => {
 
   useEffect(() => {
     const apiUrl =
-      "https://kuro.asrofur.me/sober/api/transaction/vendor/revenue";
+      "https://kuro.asrofur.me/sober/api/transaction/vendor/withdrawal";
     const bearerToken =
       "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYiLCJlbWFpbCI6InNvYmVyb2ZmaWNpYWxAZ21haWwuY29tIiwiaWF0IjoxNjk0NjczMTE0LCJleHAiOjE2OTQ3NTk1MTR9.vG5ae7OWAPxWdhFF91uzpDNngRHdCB4WOsTePN1cV0Q";
 
@@ -45,10 +43,9 @@ const RevenueTable = (props) => {
             Authorization: `Bearer ${bearerToken}`,
           },
         });
-        setRevenue(response.data.data); // Fixed variable name here
-
+        setWithdrawals(response.data.data.rows); // Fixed variable name here
         console.log("ttttttttttttttttttttttttt");
-        console.log(response.data);
+        console.log(response.data.data.rows);
       } catch (error) {
         console.error("Error fetching data:", error);
       }
@@ -56,43 +53,72 @@ const RevenueTable = (props) => {
     fetchData();
   }, []);
 
-  const getPaymentMethod = (method) => {
-    if (method === "bank_transfer")
-      return <p className="text-[12px]">Bank Transfer</p>;
-  };
-
   const toggleExport = () => {
     setexportOpen(!exportOpen);
   };
+
+  const getStatus = (Status) => {
+    if (Status === "completed")
+      return (
+        <div className="card rounded-md bg-green-400 text-center text-xs font-semibold">
+          Completed
+        </div>
+      );
+    if (Status === "processing")
+      return (
+        <div className="card rounded-md bg-blue-400 text-center text-xs font-semibold">
+          Processing
+        </div>
+      );
+    if (Status === "pending")
+      return (
+        <div className="card rounded-md bg-yellow-400 text-center text-xs font-semibold">
+          Pending
+        </div>
+      );
+  };
+
   const handleSort = (property) => {
-    const newOrder = orderBy === property && order === "asc" ? "desc" : "asc";
-    setOrder(newOrder);
+    const isAsc = orderBy === property && order === "asc";
+    setOrder(isAsc ? "desc" : "asc");
     setOrderBy(property);
   };
+
+  const sortedData = orderBy
+    ? [...withdrawals].sort((a, b) => {
+        const valueA = a[orderBy];
+        const valueB = b[orderBy];
+        const comparison = order === "asc" ? -1 : 1;
+
+        // Perform the comparison based on data types (numbers or strings)
+        if (typeof valueA === "number" && typeof valueB === "number") {
+          return (valueA - valueB) * comparison;
+        } else {
+          return valueA.localeCompare(valueB) * comparison;
+        }
+      })
+    : withdrawals;
 
   const handleSearch = (event) => {
     const value = event.target.value;
     setSearchTerm(value);
-    setPage(0);
+    setPage(0); // Reset the page to the first page when searching
   };
 
-  const sortedData = orderBy
-    ? [...revenue].sort((a, b) =>
-        order === "asc"
-          ? a[orderBy] < b[orderBy]
-            ? -1
-            : 1
-          : b[orderBy] < a[orderBy]
-          ? -1
-          : 1
-      )
-    : revenue;
+  const filteredData = sortedData.filter((row) => {
+    const valuesToSearch = [
+      row.id.toString(),
+      row.amount,
+      row.current_balance,
+      row.ec_order?.status,
+      formatDate(row.created_at), // Assuming formatDate returns a string
+    ];
 
-  const filteredData = sortedData.filter((row) =>
-    Object.values(row).some((value) =>
-      value.toString().toLowerCase().includes(searchTerm.toLowerCase())
-    )
-  );
+    // Check if any value contains the search term
+    return valuesToSearch.some((value) =>
+      value.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+  });
 
   const paginatedData = filteredData.slice(
     page * rowsPerPage,
@@ -102,9 +128,53 @@ const RevenueTable = (props) => {
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
   };
+  const confirmDelete = async () => {
+    if (rowToDelete !== null) {
+      await deleteData(rowToDelete);
+    }
+    setRowToDelete(null); // Clear the rowToDelete
+  };
+
+  const deleteData = async (rowId) => {
+    try {
+      const apiUrl = `https://kuro.asrofur.me/sober/api/transaction/vendor/withdrawal/${rowId}`;
+      const bearerToken =
+        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYiLCJlbWFpbCI6InNvYmVyb2ZmaWNpYWxAZ21haWwuY29tIiwiaWF0IjoxNjk0NjczMTE0LCJleHAiOjE2OTQ3NTk1MTR9.vG5ae7OWAPxWdhFF91uzpDNngRHdCB4WOsTePN1cV0Q";
+
+      const response = await axios.delete(apiUrl, {
+        headers: {
+          Authorization: `Bearer ${bearerToken}`,
+        },
+      });
+
+      if (response.status === 200) {
+        console.log("Success! Data deleted from API.");
+        console.log("Response data:", response.data); // Cetak respons data
+        // Data berhasil dihapus dari API, sekarang update state
+        const updatedData = withdrawals.filter((row) => row.id !== rowId);
+        setTransactions(updatedData);
+        setRowToDelete(null); // Reset rowToDelete setelah berhasil dihapus
+      } else {
+        console.error(
+          "Failed to delete data from API. Status:",
+          response.status
+        );
+      }
+    } catch (error) {
+      console.error("Error deleting data:", error);
+
+      if (error.response) {
+        console.error("Response data:", error.response.data);
+      }
+    }
+  };
+
+  const handleDeleteClick = (rowId) => {
+    setRowToDelete(rowId); // Set ID baris yang akan dihapus saat tombol "Delete" pada baris diklik
+  };
 
   return (
-    <Card className="mt-5 flex-wrap text-[12px]">
+    <Card className="mt-5 w-full text-[10px]">
       <div className="p-2 flex flex-col md:flex-row justify-between">
         <TextField
           label="Search"
@@ -144,7 +214,7 @@ const RevenueTable = (props) => {
           <button className="bg-[#36C6D3] h-[2.5rem] w-full md:w-[4.5rem] rounded-lg mt-2 md:mt-0">
             <a className="flex  p-2" href="">
               {" "}
-              <TbReload className=" mr-[3px] text-lg" />
+              <TbReload className=" text-lg" />
               Reload
             </a>
           </button>
@@ -152,7 +222,7 @@ const RevenueTable = (props) => {
       </div>
 
       <CardContent>
-        <div className="overflow-x-auto text-[12px]">
+        <div className="overflow-x-auto">
           <TableContainer component={Paper} className="min-w-full">
             <Table aria-label="custom table" className="min-w-full">
               <TableHead className="text-black">
@@ -171,22 +241,7 @@ const RevenueTable = (props) => {
                       ) : null}
                     </Button>
                   </TableCell>
-
-                  <TableCell>
-                    <Button onClick={() => handleSort("customer")}>
-                      Customer
-                      {orderBy === "customer" ? (
-                        <span>
-                          {order === "desc" ? (
-                            <ArrowDownward />
-                          ) : (
-                            <ArrowUpward />
-                          )}
-                        </span>
-                      ) : null}
-                    </Button>
-                  </TableCell>
-                  <TableCell>
+                  <TableCell className="text-black ">
                     <Button onClick={() => handleSort("Amount")}>
                       Amount
                       {orderBy === "Amount" ? (
@@ -201,9 +256,9 @@ const RevenueTable = (props) => {
                     </Button>
                   </TableCell>
                   <TableCell>
-                    <Button onClick={() => handleSort("ShippingAmount")}>
-                      Shipping Amount
-                      {orderBy === "ShippingAmount" ? (
+                    <Button onClick={() => handleSort("Fee")}>
+                      Fee
+                      {orderBy === "Fee" ? (
                         <span>
                           {order === "desc" ? (
                             <ArrowDownward />
@@ -215,9 +270,9 @@ const RevenueTable = (props) => {
                     </Button>
                   </TableCell>
                   <TableCell>
-                    <Button onClick={() => handleSort("PaymentMethod")}>
-                      Payment Method
-                      {orderBy === "PaymentMethod" ? (
+                    <Button onClick={() => handleSort("Status")}>
+                      Status
+                      {orderBy === "Status" ? (
                         <span>
                           {order === "desc" ? (
                             <ArrowDownward />
@@ -242,24 +297,32 @@ const RevenueTable = (props) => {
                       ) : null}
                     </Button>
                   </TableCell>
+                  <TableCell>Action</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
-                {paginatedData.map((revenue) => (
-                  <TableRow key={revenue.id}>
+                {paginatedData.map((withdrawal) => (
+                  <TableRow key={withdrawal.id}>
                     <TableCell className="whitespace-nowrap">
-                      {revenue.id}
+                      {withdrawal.id}
                     </TableCell>
-                    <TableCell>{revenue.customer_order.name}</TableCell>
-                    <TableCell>{revenue.amount}</TableCell>
-                    <TableCell>{revenue.shipping_amount}</TableCell>
+                    <TableCell>{withdrawal.amount}</TableCell>
+                    <TableCell>{withdrawal?.current_balance}</TableCell>
+                    <TableCell>{getStatus(withdrawal?.status)}</TableCell>
+                    <TableCell>{formatDate(withdrawal?.created_at)}</TableCell>
                     <TableCell>
-                      {getPaymentMethod(
-                        revenue?.payment_order?.payment_channel
-                      )}
-                    </TableCell>
-                    <TableCell>
-                      {formatDate(revenue.customer_order.created_at)}
+                      <div className="flex gap-2">
+                        <button className="bg-blue-500 text-white px-2 py-1 rounded-md">
+                          <MdEdit />
+                        </button>
+
+                        <button
+                          className="bg-red-500 text-white px-2 py-1 rounded-md"
+                          onClick={() => handleDeleteClick(withdrawal.id)}
+                        >
+                          <MdDelete />
+                        </button>
+                      </div>
                     </TableCell>
                   </TableRow>
                 ))}
@@ -280,8 +343,29 @@ const RevenueTable = (props) => {
           />
         </div>
       </CardContent>
+      {rowToDelete && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 text-[14]">
+          <div className="bg-white p-6 rounded-lg">
+            <p>Are you sure, you want to delete this row??</p>
+            <div className="mt-4 flex justify-end gap-3">
+              <button
+                className="bg-red-600 text-white px-3 py-1 rounded-md"
+                onClick={confirmDelete}
+              >
+                delete
+              </button>
+              <button
+                className="bg-gray-300 text-black px-3 py-1 rounded-md"
+                onClick={() => setRowToDelete(null)}
+              >
+                Cancel
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </Card>
   );
 };
 
-export default RevenueTable;
+export default WithdrawalsTable;

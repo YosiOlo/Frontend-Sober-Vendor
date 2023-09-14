@@ -1,6 +1,4 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
-import { formatDate } from "../../utils/api";
 import {
   Card,
   CardContent,
@@ -15,26 +13,26 @@ import {
   TablePagination,
   TextField,
 } from "@mui/material";
+import { Link } from "react-router-dom";
 import { MdOutlineArrowDropDown, MdEdit, MdDelete } from "react-icons/md";
 import { TbFileExport, TbReload } from "react-icons/tb";
 import { FaFileCsv } from "react-icons/fa";
 import { ArrowUpward, ArrowDownward, Search } from "@mui/icons-material";
+import axios from "axios";
+import { formatDate } from "../../utils/api";
 
-const RevenueTable = (props) => {
-  const [revenue, setRevenue] = useState([]);
-  const { DataRevenue } = props;
-  const [tableData, setTableData] = useState(DataRevenue);
-  const [orderBy, setOrderBy] = useState("");
+const TableCoupons = () => {
+  const [orderBy, setOrderBy] = useState("id");
   const [order, setOrder] = useState("asc");
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [searchTerm, setSearchTerm] = useState("");
   const [exportOpen, setexportOpen] = useState(false);
   const [rowToDelete, setRowToDelete] = useState(null); // Store the ID of the row to delete
+  const [discounts, setDiscounts] = useState([]);
 
   useEffect(() => {
-    const apiUrl =
-      "https://kuro.asrofur.me/sober/api/transaction/vendor/revenue";
+    const apiUrl = "https://kuro.asrofur.me/sober/api/discount/vendor/list/";
     const bearerToken =
       "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYiLCJlbWFpbCI6InNvYmVyb2ZmaWNpYWxAZ21haWwuY29tIiwiaWF0IjoxNjk0NjczMTE0LCJleHAiOjE2OTQ3NTk1MTR9.vG5ae7OWAPxWdhFF91uzpDNngRHdCB4WOsTePN1cV0Q";
 
@@ -45,54 +43,63 @@ const RevenueTable = (props) => {
             Authorization: `Bearer ${bearerToken}`,
           },
         });
-        setRevenue(response.data.data); // Fixed variable name here
 
+        setDiscounts(response?.data.data);
         console.log("ttttttttttttttttttttttttt");
-        console.log(response.data);
+        console.log(response.data.data);
       } catch (error) {
         console.error("Error fetching data:", error);
       }
     };
+
     fetchData();
   }, []);
-
-  const getPaymentMethod = (method) => {
-    if (method === "bank_transfer")
-      return <p className="text-[12px]">Bank Transfer</p>;
-  };
 
   const toggleExport = () => {
     setexportOpen(!exportOpen);
   };
+
   const handleSort = (property) => {
-    const newOrder = orderBy === property && order === "asc" ? "desc" : "asc";
-    setOrder(newOrder);
+    const isAsc = orderBy === property && order === "asc";
+    setOrder(isAsc ? "desc" : "asc");
     setOrderBy(property);
   };
+
+  const sortedData = [...discounts].sort((a, b) => {
+    const valueA = a[orderBy];
+    const valueB = b[orderBy];
+
+    if (typeof valueA === "number" && typeof valueB === "number") {
+      return order === "asc" ? valueA - valueB : valueB - valueA;
+    } else if (typeof valueA === "string" && typeof valueB === "string") {
+      return order === "asc"
+        ? valueA.localeCompare(valueB)
+        : valueB.localeCompare(valueA);
+    } else {
+      return 0; // Handle other data types or return 0 if no data type matches
+    }
+  });
 
   const handleSearch = (event) => {
     const value = event.target.value;
     setSearchTerm(value);
-    setPage(0);
+    setPage(0); // Reset the page to the first page when searching
   };
 
-  const sortedData = orderBy
-    ? [...revenue].sort((a, b) =>
-        order === "asc"
-          ? a[orderBy] < b[orderBy]
-            ? -1
-            : 1
-          : b[orderBy] < a[orderBy]
-          ? -1
-          : 1
-      )
-    : revenue;
+  const filteredData = sortedData.filter((row) => {
+    const valuesToSearch = [
+      row.id.toString(),
+      row.code,
+      row?.total_used,
+      row?.start_date,
+      row?.end_date,
+    ];
 
-  const filteredData = sortedData.filter((row) =>
-    Object.values(row).some((value) =>
-      value.toString().toLowerCase().includes(searchTerm.toLowerCase())
-    )
-  );
+    // Check if any value contains the search term
+    return valuesToSearch.some(
+      (value) => value && value.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+  });
 
   const paginatedData = filteredData.slice(
     page * rowsPerPage,
@@ -103,8 +110,53 @@ const RevenueTable = (props) => {
     setPage(newPage);
   };
 
+  const confirmDelete = async () => {
+    if (rowToDelete !== null) {
+      await deleteData(rowToDelete);
+    }
+    setRowToDelete(null); // Clear the rowToDelete
+  };
+
+  const deleteData = async (rowId) => {
+    try {
+      const apiUrl = `https://kuro.asrofur.me/sober/api/discount/vendor/${rowId}`;
+      const bearerToken =
+        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYiLCJlbWFpbCI6InNvYmVyb2ZmaWNpYWxAZ21haWwuY29tIiwiaWF0IjoxNjk0MDY5MzEyLCJleHAiOjE2OTQxNTU3MTJ9.W7klGrBSXeGSSDPYNnLbIbC6fgy-JAmohdiBKXPjQx8";
+
+      const response = await axios.delete(apiUrl, {
+        headers: {
+          Authorization: `Bearer ${bearerToken}`,
+        },
+      });
+
+      if (response.status === 200) {
+        console.log("Success! Data deleted from API.");
+        console.log("Response data:", response.data); // Cetak respons data
+        // Data berhasil dihapus dari API, sekarang update state
+        const updatedData = discounts.filter((row) => row.id !== rowId);
+        setDiscounts(updatedData);
+        setRowToDelete(null); // Reset rowToDelete setelah berhasil dihapus
+      } else {
+        console.error(
+          "Failed to delete data from API. Status:",
+          response.status
+        );
+      }
+    } catch (error) {
+      console.error("Error deleting data:", error);
+
+      if (error.response) {
+        console.error("Response data:", error.response.data);
+      }
+    }
+  };
+
+  const handleDeleteClick = (rowId) => {
+    setRowToDelete(rowId); // Set ID baris yang akan dihapus saat tombol "Delete" pada baris diklik
+  };
+
   return (
-    <Card className="mt-5 flex-wrap text-[12px]">
+    <Card className="mt-5 w-full">
       <div className="p-2 flex flex-col md:flex-row justify-between">
         <TextField
           label="Search"
@@ -117,7 +169,7 @@ const RevenueTable = (props) => {
             endAdornment: <Search />,
           }}
         />
-        <div className="action flex flex-col md:flex-row space-x-0 md:space-x-3 font-semibold text-[12px] ">
+        <div className="action flex flex-col sm:w-[100%] text-white md:flex-row space-x-0 md:space-x-3 font-semibold text-[12px] ">
           <div className="relative">
             <button
               className="flex px-4 py-2 bg-[#36C6D3] rounded-lg"
@@ -133,7 +185,7 @@ const RevenueTable = (props) => {
                     {" "}
                     <FaFileCsv className="mr-1" /> Csv
                   </li>
-                  <li className="flex p-1 font-medium items-center hover:bg-[#36C6D3] rounded-lg ">
+                  <li className="flex p-1 font-medium items-center hover:bg-[#36C6D3] rounded-md ">
                     {" "}
                     <FaFileCsv className="mr-1" /> Csv
                   </li>
@@ -141,25 +193,28 @@ const RevenueTable = (props) => {
               </div>
             )}
           </div>
-          <button className="bg-[#36C6D3] h-[2.5rem] w-full md:w-[4.5rem] rounded-lg mt-2 md:mt-0">
-            <a className="flex  p-2" href="">
-              {" "}
-              <TbReload className=" mr-[3px] text-lg" />
-              Reload
-            </a>
+          <button className="bg-[#36C6D3] flex justify-between p-2 h-[2.5rem] w-full md:w-[6rem] rounded-md mt-2 md:mt-0">
+            <TbReload className="  text-lg" />
+            Reload
           </button>
+          <Link to="/VenCreateCoupons">
+            <button className="bg-[#36C6D3] flex justify-between p-2 h-[2.5rem] w-full md:w-[6rem] rounded-lg mt-2 md:mt-0">
+              <TbReload className="text-lg mt-1" />
+              Create
+            </button>
+          </Link>
         </div>
       </div>
 
-      <CardContent>
-        <div className="overflow-x-auto text-[12px]">
+      <CardContent className="sm:w-auto">
+        <div className="overflow-x-auto">
           <TableContainer component={Paper} className="min-w-full">
             <Table aria-label="custom table" className="min-w-full">
               <TableHead className="text-black">
                 <TableRow className="text-black">
                   <TableCell className="text-black ">
                     <Button onClick={() => handleSort("id")}>
-                      ID
+                      id
                       {orderBy === "id" ? (
                         <span>
                           {order === "desc" ? (
@@ -173,9 +228,9 @@ const RevenueTable = (props) => {
                   </TableCell>
 
                   <TableCell>
-                    <Button onClick={() => handleSort("customer")}>
-                      Customer
-                      {orderBy === "customer" ? (
+                    <Button onClick={() => handleSort("detail")}>
+                      detail
+                      {orderBy === "detail" ? (
                         <span>
                           {order === "desc" ? (
                             <ArrowDownward />
@@ -187,9 +242,9 @@ const RevenueTable = (props) => {
                     </Button>
                   </TableCell>
                   <TableCell>
-                    <Button onClick={() => handleSort("Amount")}>
-                      Amount
-                      {orderBy === "Amount" ? (
+                    <Button onClick={() => handleSort("used")}>
+                      used
+                      {orderBy === "used" ? (
                         <span>
                           {order === "desc" ? (
                             <ArrowDownward />
@@ -201,9 +256,9 @@ const RevenueTable = (props) => {
                     </Button>
                   </TableCell>
                   <TableCell>
-                    <Button onClick={() => handleSort("ShippingAmount")}>
-                      Shipping Amount
-                      {orderBy === "ShippingAmount" ? (
+                    <Button onClick={() => handleSort("startDate")}>
+                      startDate
+                      {orderBy === "startDate" ? (
                         <span>
                           {order === "desc" ? (
                             <ArrowDownward />
@@ -215,9 +270,9 @@ const RevenueTable = (props) => {
                     </Button>
                   </TableCell>
                   <TableCell>
-                    <Button onClick={() => handleSort("PaymentMethod")}>
-                      Payment Method
-                      {orderBy === "PaymentMethod" ? (
+                    <Button onClick={() => handleSort("endDate")}>
+                      endDate
+                      {orderBy === "endDate" ? (
                         <span>
                           {order === "desc" ? (
                             <ArrowDownward />
@@ -229,9 +284,9 @@ const RevenueTable = (props) => {
                     </Button>
                   </TableCell>
                   <TableCell>
-                    <Button onClick={() => handleSort("CreatedAt")}>
-                      Created At
-                      {orderBy === "CreatedAt" ? (
+                    <Button onClick={() => handleSort("operations")}>
+                      operations
+                      {orderBy === "operations" ? (
                         <span>
                           {order === "desc" ? (
                             <ArrowDownward />
@@ -245,21 +300,31 @@ const RevenueTable = (props) => {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {paginatedData.map((revenue) => (
-                  <TableRow key={revenue.id}>
+                {paginatedData.map((discount) => (
+                  <TableRow key={discount?.id}>
                     <TableCell className="whitespace-nowrap">
-                      {revenue.id}
+                      {discount?.id}
                     </TableCell>
-                    <TableCell>{revenue.customer_order.name}</TableCell>
-                    <TableCell>{revenue.amount}</TableCell>
-                    <TableCell>{revenue.shipping_amount}</TableCell>
+                    <TableCell>{discount?.code}</TableCell>
+                    <TableCell>{discount?.total_used}</TableCell>
+                    <TableCell>{formatDate(discount?.start_date)}</TableCell>
+                    <TableCell>{formatDate(discount?.end_date)}</TableCell>
+
                     <TableCell>
-                      {getPaymentMethod(
-                        revenue?.payment_order?.payment_channel
-                      )}
-                    </TableCell>
-                    <TableCell>
-                      {formatDate(revenue.customer_order.created_at)}
+                      <div className="flex gap-2">
+                        <button
+                          className="bg-blue-500 text-white px-2 py-1 rounded-md"
+                          onClick={() => handleEdit(discount.id)} // Implement the handleEdit function
+                        >
+                          <MdEdit />
+                        </button>
+                        <button
+                          className="bg-red-500 text-white px-2 py-1 rounded-md"
+                          onClick={() => handleDeleteClick(discount.id)} // Implement the handleDelete function
+                        >
+                          <MdDelete />
+                        </button>
+                      </div>
                     </TableCell>
                   </TableRow>
                 ))}
@@ -280,8 +345,29 @@ const RevenueTable = (props) => {
           />
         </div>
       </CardContent>
+      {rowToDelete && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 text-[14]">
+          <div className="bg-white p-6 rounded-lg">
+            <p>Are you sure, you want to delete this row??</p>
+            <div className="mt-4 flex justify-end gap-3">
+              <button
+                className="bg-red-600 text-white px-3 py-1 rounded-md"
+                onClick={confirmDelete}
+              >
+                delete
+              </button>
+              <button
+                className="bg-gray-300 text-black px-3 py-1 rounded-md"
+                onClick={() => setRowToDelete(null)}
+              >
+                Cancel
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </Card>
   );
 };
 
-export default RevenueTable;
+export default TableCoupons;

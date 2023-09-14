@@ -34,7 +34,7 @@ const TableOrders = () => {
     const apiUrl =
       "https://kuro.asrofur.me/sober/api/transaction/vendor?limit=30";
     const bearerToken =
-      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYiLCJlbWFpbCI6InNvYmVyb2ZmaWNpYWxAZ21haWwuY29tIiwiaWF0IjoxNjkzOTgyNTc3LCJleHAiOjE2OTQwNjg5Nzd9.2wq7vcqUGEzV7wQhc8477DxYqyfONLdjaWtbJsYaics";
+      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYiLCJlbWFpbCI6InNvYmVyb2ZmaWNpYWxAZ21haWwuY29tIiwiaWF0IjoxNjk0NjczMTE0LCJleHAiOjE2OTQ3NTk1MTR9.vG5ae7OWAPxWdhFF91uzpDNngRHdCB4WOsTePN1cV0Q";
 
     const fetchData = async () => {
       try {
@@ -45,12 +45,10 @@ const TableOrders = () => {
         });
 
         setTransactions(response?.data.data.rows);
-        setLoading(false); // Data is loaded
         console.log("ttttttttttttttttttttttttt");
         console.log(response.data.data.rows);
       } catch (error) {
         console.error("Error fetching data:", error);
-        setLoading(false); // Error occurred, set loading to false
       }
     };
 
@@ -165,19 +163,18 @@ const TableOrders = () => {
     setRowToDelete(null); // Clear the rowToDelete
   };
 
-  
   const deleteData = async (rowId) => {
     try {
       const apiUrl = `https://kuro.asrofur.me/sober/api/transaction/vendor/${rowId}`;
       const bearerToken =
-        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYiLCJlbWFpbCI6InNvYmVyb2ZmaWNpYWxAZ21haWwuY29tIiwiaWF0IjoxNjkzOTgyNTc3LCJleHAiOjE2OTQwNjg5Nzd9.2wq7vcqUGEzV7wQhc8477DxYqyfONLdjaWtbJsYaics";
-  
+        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYiLCJlbWFpbCI6InNvYmVyb2ZmaWNpYWxAZ21haWwuY29tIiwiaWF0IjoxNjk0NjczMTE0LCJleHAiOjE2OTQ3NTk1MTR9.vG5ae7OWAPxWdhFF91uzpDNngRHdCB4WOsTePN1cV0Q";
+
       const response = await axios.delete(apiUrl, {
         headers: {
           Authorization: `Bearer ${bearerToken}`,
         },
       });
-  
+
       if (response.status === 200) {
         console.log("Success! Data deleted from API.");
         console.log("Response data:", response.data); // Cetak respons data
@@ -186,18 +183,19 @@ const TableOrders = () => {
         setTransactions(updatedData);
         setRowToDelete(null); // Reset rowToDelete setelah berhasil dihapus
       } else {
-        console.error("Failed to delete data from API. Status:", response.status);
+        console.error(
+          "Failed to delete data from API. Status:",
+          response.status
+        );
       }
     } catch (error) {
       console.error("Error deleting data:", error);
-  
+
       if (error.response) {
         console.error("Response data:", error.response.data);
       }
     }
   };
-  
-  
 
   const handleDeleteClick = (rowId) => {
     setRowToDelete(rowId); // Set ID baris yang akan dihapus saat tombol "Delete" pada baris diklik

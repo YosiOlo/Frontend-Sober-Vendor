@@ -1,12 +1,12 @@
 import React from 'react';
 import TopBar from '../Components/TopBar/TopBar';
-import IndexCoupon from '../Components/Coupons/IndexCoupon';
+import TableCoupons from '../Components/Coupons/TableCoupons';
 
 function CouponsPage() {
   return (
     <div>
       <TopBar title="Coupons"/>
-      <IndexCoupon/>
+      <TableCoupons/>
     </div>
   )
 }

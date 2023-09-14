@@ -13,6 +13,7 @@ import {
   TablePagination,
   TextField,
 } from "@mui/material";
+import { Link } from "react-router-dom";
 import { MdOutlineArrowDropDown, MdEdit, MdDelete } from "react-icons/md";
 import { TbFileExport, TbReload } from "react-icons/tb";
 import { FaFileCsv } from "react-icons/fa";
@@ -35,7 +36,7 @@ const TableProducts = () => {
     const apiUrl =
       "https://kuro.asrofur.me/sober/api/product/vendor/list?name&limit=5&search";
     const bearerToken =
-      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYiLCJlbWFpbCI6InNvYmVyb2ZmaWNpYWxAZ21haWwuY29tIiwiaWF0IjoxNjkzOTgyNTc3LCJleHAiOjE2OTQwNjg5Nzd9.2wq7vcqUGEzV7wQhc8477DxYqyfONLdjaWtbJsYaics";
+      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYiLCJlbWFpbCI6InNvYmVyb2ZmaWNpYWxAZ21haWwuY29tIiwiaWF0IjoxNjk0NjczMTE0LCJleHAiOjE2OTQ3NTk1MTR9.vG5ae7OWAPxWdhFF91uzpDNngRHdCB4WOsTePN1cV0Q";
 
     const fetchData = async () => {
       try {
@@ -58,54 +59,24 @@ const TableProducts = () => {
     fetchData();
   }, []);
 
-  const getPaymentStatus = (PaymentStatus) => {
-    if (PaymentStatus === "completed")
-      return (
-        <div className="card rounded-md bg-green-400 text-center text-xs font-semibold">
-          Completed
-        </div>
-      );
-    if (PaymentStatus === "pending")
-      return (
-        <div className="card rounded-md bg-yellow-400 text-center text-xs font-semibold">
-          Pending
-        </div>
-      );
-    else return <div className="badge badge-ghost">{PaymentStatus}</div>;
-  };
-
   const toggleExport = () => {
     setexportOpen(!exportOpen);
   };
   const getStatus = (Status) => {
-    if (Status === "completed")
+    if (Status === "published")
       return (
-        <div className="card rounded-md bg-green-400 text-center text-xs font-semibold">
-          {Status}
+        <div className="card rounded-md p-1 bg-[#36c6d3] text-center text-xs font-semibold">
+          Published
         </div>
       );
-    if (Status === "processing")
+    else {
       return (
-        <div className="card rounded-md bg-blue-400 text-center text-xs font-semibold">
-          {Status}
+        <div className="card rounded-md bg-red-400 text-center text-xs font-semibold">
+          Pending
         </div>
       );
-    if (Status === "pending")
-      return (
-        <div className="card rounded-md bg-yellow-400 text-center text-xs font-semibold">
-          {Status}
-        </div>
-      );
+    }
   };
-
-  const getPaymentMethod = (method) => {
-    if (method === "bank_transfer")
-      return <p className="text-[12px]">Bank Transfer</p>;
-    if (method === "virtual_account")
-      return <p className="text-[12px]">Virtual Account</p>;
-    else return <p className="text-[12px]">{method}</p>;
-  };
-
   const handleSort = (property) => {
     const isAsc = orderBy === property && order === "asc";
     setOrder(isAsc ? "desc" : "asc");
@@ -168,9 +139,9 @@ const TableProducts = () => {
 
   const deleteData = async (rowId) => {
     try {
-      const apiUrl = `https://kuro.asrofur.me/sober/api/product/vendor/${rowId}`;
+      const apiUrl = `https://kuro.asrofur.me/sober/api/product/${rowId}`;
       const bearerToken =
-        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYiLCJlbWFpbCI6InNvYmVyb2ZmaWNpYWxAZ21haWwuY29tIiwiaWF0IjoxNjkzOTgyNTc3LCJleHAiOjE2OTQwNjg5Nzd9.2wq7vcqUGEzV7wQhc8477DxYqyfONLdjaWtbJsYaics";
+        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYiLCJlbWFpbCI6InNvYmVyb2ZmaWNpYWxAZ21haWwuY29tIiwiaWF0IjoxNjk0NjczMTE0LCJleHAiOjE2OTQ3NTk1MTR9.vG5ae7OWAPxWdhFF91uzpDNngRHdCB4WOsTePN1cV0Q";
 
       const response = await axios.delete(apiUrl, {
         headers: {
@@ -218,7 +189,7 @@ const TableProducts = () => {
             endAdornment: <Search />,
           }}
         />
-        <div className="action flex flex-col sm:w-[100%] md:flex-row space-x-0 md:space-x-3 font-semibold text-[12px] ">
+        <div className="action flex flex-col sm:w-[100%] text-white md:flex-row space-x-0 md:space-x-3 font-semibold text-[12px] ">
           <div className="relative">
             <button
               className="flex px-4 py-2 bg-[#36C6D3] rounded-lg"
@@ -242,13 +213,16 @@ const TableProducts = () => {
               </div>
             )}
           </div>
-          <button className="bg-[#36C6D3] h-[2.5rem] w-full md:w-[4.5rem] rounded-md mt-2 md:mt-0">
-            <a className="flex  p-2" href="">
-              {" "}
-              <TbReload className="  text-lg" />
-              Reload
-            </a>
+          <button className="bg-[#36C6D3] flex justify-between p-2 h-[2.5rem] w-full md:w-[6rem] rounded-md mt-2 md:mt-0">
+            <TbReload className="  text-lg" />
+            Reload
           </button>
+          <Link to="/VenCreateProduct">
+            <button className="bg-[#36C6D3] flex justify-between p-2 h-[2.5rem] w-full md:w-[6rem] rounded-lg mt-2 md:mt-0">
+              <TbReload className="text-lg mt-1" />
+              Create
+            </button>
+          </Link>
         </div>
       </div>
 
@@ -394,7 +368,11 @@ const TableProducts = () => {
                       {product?.id}
                     </TableCell>
                     <TableCell>
-                      <img className="h-14 w-14" src={"https://kuro.asrofur.me/sober/"+product.images} alt="" />
+                      <img
+                        className="h-14 w-14"
+                        src={"https://kuro.asrofur.me/sober/" + product.images}
+                        alt=""
+                      />
                     </TableCell>
                     <TableCell>{product?.name}</TableCell>
                     <TableCell>{product?.price}</TableCell>
@@ -402,7 +380,7 @@ const TableProducts = () => {
                     <TableCell>{product?.sku}</TableCell>
                     <TableCell>{product?.order}</TableCell>
                     <TableCell>{formatDate(product?.created_at)}</TableCell>
-                    <TableCell>{product?.status}</TableCell>
+                    <TableCell>{getStatus(product?.status)}</TableCell>
                     <TableCell>
                       <div className="flex gap-2">
                         <button

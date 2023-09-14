@@ -38,7 +38,7 @@ function AddCoupons() {
         <input
           type="text"
           id="coupon"
-          value={couponCode}
+          value={couponCode ||""}
           className="block w-full mt-1 mb-1 p-2 border bg-[#f9f9f9] border-gray-300 rounded-md focus:ring focus:ring-blue-200 focus:ring-opacity-50"
         />
         <div className="notif bg-blue-200 p-2 mb-2">
