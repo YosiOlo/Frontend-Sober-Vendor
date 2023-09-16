@@ -1,6 +1,6 @@
 import { CKEditor } from "@ckeditor/ckeditor5-react";
-import React, { useState } from "react";
 import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
+import React, { useState } from "react";
 
 const InputForm = () => {
   const [productName, setProductName] = useState("");
@@ -462,6 +462,29 @@ const InputForm = () => {
                 </button>
               </div>
             </div>
+          </div>
+          <div className="relatedProduct flex flex-col">
+            <p className="font-medium p-3 border-b-[1px] border-slate-200">
+              Related products
+            </p>
+            <label htmlFor="relatedProduct">relatedProduct</label>
+            <input
+              type="text"
+              placeholder="Search Products"
+              onChange={(e) =>
+                handleAttributeChange(index, "name", e.target.value)
+              }
+              className=" px-4 py-2 rounded-md bg-[#f9f9f9] border focus:outline-none focus:border-blue-500 mr-2"
+            />
+            <label htmlFor="Cross-selling products">Cross-selling products</label>
+            <input
+              type="text"
+              placeholder="Cross-selling products"
+              onChange={(e) =>
+                handleAttributeChange(index, "name", e.target.value)
+              }
+              className="px-4 py-2 rounded-md bg-[#f9f9f9] border focus:outline-none focus:border-blue-500 mr-2"
+            />
           </div>
         </form>
       </div>

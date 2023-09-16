@@ -5,9 +5,9 @@ import { MdNavigateNext,MdOutlineAccountBalanceWallet } from "react-icons/md";
 
 
 const data = [
-  { name: "Group B", value: 300 },
-  { name: "Group C", value: 300 },
-  { name: "Group D", value: 200 },
+  { name: "Pendapatan", value: 300 },
+  { name: "Biaya", value: 300 },
+  { name: "Penarikan", value: 200 },
 ];
 
 const COLORS = ["#00C49F", "#FFBB28", "#FF8042"];
@@ -51,11 +51,11 @@ function ChartTwo() {
         </p>
       </div>
       <div className="">
-          <PieChart width={400} height={400}>
+          <PieChart width={400} height={250}>
             <Pie
               data={data}
               cx="40%"
-              cy="35%"
+              cy="50%"
               labelLine={false}
               label={renderCustomizedLabel}
               outerRadius={110}

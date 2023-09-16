@@ -30,10 +30,9 @@ const ReviewTable = () => {
   const [exportOpen, setexportOpen] = useState(false);
 
   useEffect(() => {
-    const apiUrl =
-      "https://kuro.asrofur.me/sober/api/review/vendor/list";
+    const apiUrl = "https://kuro.asrofur.me/sober/api/review/vendor/list";
     const bearerToken =
-      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYiLCJlbWFpbCI6InNvYmVyb2ZmaWNpYWxAZ21haWwuY29tIiwiaWF0IjoxNjk0NjczMTE0LCJleHAiOjE2OTQ3NTk1MTR9.vG5ae7OWAPxWdhFF91uzpDNngRHdCB4WOsTePN1cV0Q";
+      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYiLCJlbWFpbCI6InNvYmVyb2ZmaWNpYWxAZ21haWwuY29tIiwiaWF0IjoxNjk0NzYzMjQwLCJleHAiOjE2OTQ4NDk2NDB9.685_1ZkUcFetsS1WHcLhsGt9DFIlntloGDURLoXDjdk";
 
     const fetchData = async () => {
       try {
@@ -171,7 +170,7 @@ const ReviewTable = () => {
 
                   <TableCell>
                     <Button onClick={() => handleSort("product")}>
-                    product
+                      product
                       {orderBy === "product" ? (
                         <span>
                           {order === "desc" ? (
@@ -185,7 +184,7 @@ const ReviewTable = () => {
                   </TableCell>
                   <TableCell>
                     <Button onClick={() => handleSort("user")}>
-                    user
+                      user
                       {orderBy === "user" ? (
                         <span>
                           {order === "desc" ? (
@@ -199,7 +198,7 @@ const ReviewTable = () => {
                   </TableCell>
                   <TableCell>
                     <Button onClick={() => handleSort("star")}>
-                    star
+                      star
                       {orderBy === "star" ? (
                         <span>
                           {order === "desc" ? (
@@ -213,7 +212,7 @@ const ReviewTable = () => {
                   </TableCell>
                   <TableCell>
                     <Button onClick={() => handleSort("comment")}>
-                    comment
+                      comment
                       {orderBy === "comment" ? (
                         <span>
                           {order === "desc" ? (
@@ -227,7 +226,7 @@ const ReviewTable = () => {
                   </TableCell>
                   <TableCell>
                     <Button onClick={() => handleSort("images")}>
-                    images
+                      images
                       {orderBy === "images" ? (
                         <span>
                           {order === "desc" ? (
@@ -268,13 +267,14 @@ const ReviewTable = () => {
                     <TableCell>
                       <img
                         className="h-20 w-20"
-                        src={"https://kuro.asrofur.me/sober/" + review?.product?.images}
+                        src={
+                          "https://kuro.asrofur.me/sober/" +
+                          review?.product?.images
+                        }
                         alt=""
                       />
                     </TableCell>
-                    <TableCell>
-                      {formatDate(review?.created_at)}
-                    </TableCell>
+                    <TableCell>{formatDate(review?.created_at)}</TableCell>
                   </TableRow>
                 ))}
               </TableBody>

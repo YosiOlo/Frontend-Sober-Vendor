@@ -13,6 +13,7 @@ import {
   TablePagination,
   TextField,
 } from "@mui/material";
+import { CSVLink } from "react-csv";
 import { MdOutlineArrowDropDown, MdEdit, MdDelete } from "react-icons/md";
 import { TbFileExport, TbReload } from "react-icons/tb";
 import { FaFileCsv } from "react-icons/fa";
@@ -26,6 +27,7 @@ const TableOrders = () => {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [searchTerm, setSearchTerm] = useState("");
+  const [exportData, setExportData] = useState([]);
   const [exportOpen, setexportOpen] = useState(false);
   const [rowToDelete, setRowToDelete] = useState(null); // Store the ID of the row to delete
   const [transactions, setTransactions] = useState([]);
@@ -34,7 +36,7 @@ const TableOrders = () => {
     const apiUrl =
       "https://kuro.asrofur.me/sober/api/transaction/vendor?limit=30";
     const bearerToken =
-      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYiLCJlbWFpbCI6InNvYmVyb2ZmaWNpYWxAZ21haWwuY29tIiwiaWF0IjoxNjk0NjczMTE0LCJleHAiOjE2OTQ3NTk1MTR9.vG5ae7OWAPxWdhFF91uzpDNngRHdCB4WOsTePN1cV0Q";
+      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYiLCJlbWFpbCI6InNvYmVyb2ZmaWNpYWxAZ21haWwuY29tIiwiaWF0IjoxNjk0NzYzMjQwLCJleHAiOjE2OTQ4NDk2NDB9.685_1ZkUcFetsS1WHcLhsGt9DFIlntloGDURLoXDjdk";
 
     const fetchData = async () => {
       try {
@@ -43,10 +45,12 @@ const TableOrders = () => {
             Authorization: `Bearer ${bearerToken}`,
           },
         });
+        setExportData(response?.data.data.rows);
 
         setTransactions(response?.data.data.rows);
-        console.log("ttttttttttttttttttttttttt");
-        console.log(response.data.data.rows);
+        // console.log("ttttttttttttttttttttttttt");
+        // console.log(response.data.data.rows);
+        console.log(paginatedData);
       } catch (error) {
         console.error("Error fetching data:", error);
       }
@@ -156,6 +160,62 @@ const TableOrders = () => {
     setPage(newPage);
   };
 
+  const headers = [
+    {
+      label: "id",
+      key: "id",
+    },
+    {
+      label: "customer",
+      key: "customer",
+    },
+    {
+      label: "amount",
+      key: "amount",
+    },
+    {
+      label: "Shipping Amount",
+      key: "shipping_amount",
+    },
+    {
+      label: "Payment Method",
+      key: "payment_channel",
+    },
+    {
+      label: "Payment Status",
+      key: "payment_status",
+    },
+    {
+      label: "Status",
+      key: "status",
+    },
+    {
+      label: "Created At",
+      key: "created_at",
+    },
+  ];
+
+  const DataSet = [
+    {
+      data: paginatedData.map((data) => ({
+        id: data?.id,
+        customer: data?.order_addresses?.name,
+        amount: data?.amount,
+        shipping_amount: data?.shipping_amount,
+        payment_channel: data?.payment_order?.payment_channel,
+        payment_status: data?.payment_order?.status,
+        status: data?.status,
+        created_at: data?.payment_order?.created_at,
+      })),
+    },
+  ];
+
+  const csvLinkProps = {
+    filename: "Orders.csv",
+    headers: headers,
+    data: DataSet[0].data, // Access the data property from DataSet
+  };
+
   const confirmDelete = async () => {
     if (rowToDelete !== null) {
       await deleteData(rowToDelete);
@@ -167,7 +227,7 @@ const TableOrders = () => {
     try {
       const apiUrl = `https://kuro.asrofur.me/sober/api/transaction/vendor/${rowId}`;
       const bearerToken =
-        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYiLCJlbWFpbCI6InNvYmVyb2ZmaWNpYWxAZ21haWwuY29tIiwiaWF0IjoxNjk0NjczMTE0LCJleHAiOjE2OTQ3NTk1MTR9.vG5ae7OWAPxWdhFF91uzpDNngRHdCB4WOsTePN1cV0Q";
+        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYiLCJlbWFpbCI6InNvYmVyb2ZmaWNpYWxAZ21haWwuY29tIiwiaWF0IjoxNjk0NzYzMjQwLCJleHAiOjE2OTQ4NDk2NDB9.685_1ZkUcFetsS1WHcLhsGt9DFIlntloGDURLoXDjdk";
 
       const response = await axios.delete(apiUrl, {
         headers: {
@@ -227,9 +287,11 @@ const TableOrders = () => {
             {exportOpen && (
               <div className="absolute w-[100px] text-black p-2 right-0 mt-2 border border-gray-300 rounded-lg">
                 <ul className="p">
-                  <li className="flex p-1 font-medium items-center border-b border-gray-400 mb-2 hover:bg-[#36C6D3] rounded-lg">
+                  <li className="flex p-1 font-medium items-center hover:bg-[#36C6D3] rounded-lg ">
                     {" "}
-                    <FaFileCsv className="mr-1" /> Csv
+                    <CSVLink {...csvLinkProps}>
+                      <FaFileCsv className="mr-1" /> Csv
+                    </CSVLink>
                   </li>
                   <li className="flex p-1 font-medium items-center hover:bg-[#36C6D3] rounded-lg ">
                     {" "}
