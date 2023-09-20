@@ -170,10 +170,10 @@ const RevenueTable = (props) => {
             endAdornment: <Search />,
           }}
         />
-        <div className="action flex flex-col md:flex-row space-x-0 md:space-x-3 font-semibold text-[12px] ">
+        <div className="action flex text-white flex-col md:flex-row space-x-0 md:space-x-3 font-semibold text-[12px] ">
           <div className="relative">
             <button
-              className="flex px-4 py-2 bg-[#36C6D3] rounded-lg"
+              className="flex gap-2 px-4 py-2 bg-[#36C6D3] rounded-lg"
               onClick={toggleExport}
             >
               <TbFileExport className="mr-1 mt-[2px] bg-[#36C6D3]" />
@@ -197,10 +197,10 @@ const RevenueTable = (props) => {
               </div>
             )}
           </div>
-          <button className="bg-[#36C6D3] h-[2.5rem] w-full md:w-[4.5rem] rounded-lg mt-2 md:mt-0">
-            <a className="flex  p-2" href="">
+          <button className="bg-[#36C6D3] h-[2.5rem]  rounded-lg mt-2 md:mt-0">
+            <a className="flex gap-2 p-2" href="">
               {" "}
-              <TbReload className=" mr-[3px] text-lg" />
+              <TbReload className=" mt-[2px] text-lg" />
               Reload
             </a>
           </button>

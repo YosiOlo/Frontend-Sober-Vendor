@@ -14,9 +14,9 @@ import {
   TextField,
 } from "@mui/material";
 import { Link } from "react-router-dom";
-import { MdOutlineArrowDropDown, MdEdit, MdDelete } from "react-icons/md";
-import { TbFileExport, TbReload } from "react-icons/tb";
-import { FaFileCsv } from "react-icons/fa";
+import {AiFillFileAdd} from "react-icons/ai"
+import { MdEdit, MdDelete } from "react-icons/md";
+import {  TbReload } from "react-icons/tb";
 import { ArrowUpward, ArrowDownward, Search } from "@mui/icons-material";
 import axios from "axios";
 import { formatDate } from "../../utils/api";
@@ -171,12 +171,12 @@ const TableCoupons = () => {
         />
         <div className="action flex flex-col sm:w-[100%] text-white md:flex-row space-x-0 md:space-x-3 font-semibold text-[12px] ">
           <button className="bg-[#36C6D3] flex justify-between p-2 h-[2.5rem] w-full md:w-[6rem] rounded-md mt-2 md:mt-0">
-            <TbReload className="  text-lg" />
+            <TbReload className=" mt-[2px] text-lg" />
             Reload
           </button>
           <Link to="/VenCreateCoupons">
             <button className="bg-[#36C6D3] flex justify-between p-2 h-[2.5rem] w-full md:w-[6rem] rounded-lg mt-2 md:mt-0">
-              <TbReload className="text-lg mt-1" />
+              <AiFillFileAdd className="text-lg mt-[1px]" />
               Create
             </button>
           </Link>

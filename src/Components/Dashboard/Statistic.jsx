@@ -38,7 +38,6 @@ const CardList = () => {
               <div className="font-normal text-xs  mb-2 text-green-500">{card.title}</div>
               <p className="text-gray-700 text-xl font-semibold">{card.description}</p>
             </div>
-            <div className="icon p-3">{card.icons}</div>
           </div>
         </div>
       ))}

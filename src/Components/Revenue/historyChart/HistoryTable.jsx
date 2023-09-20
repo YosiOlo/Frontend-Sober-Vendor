@@ -15,24 +15,30 @@ import {
   TablePagination,
   TextField,
 } from "@mui/material";
+import { CSVLink } from "react-csv";
+import * as XLSX from "xlsx";
 import { MdOutlineArrowDropDown, MdEdit, MdDelete } from "react-icons/md";
 import { TbFileExport, TbReload } from "react-icons/tb";
 import { FaFileCsv } from "react-icons/fa";
 import { ArrowUpward, ArrowDownward, Search } from "@mui/icons-material";
 
-const ReviewTable = () => {
-  const [review, setReview] = useState([]);
+const HistoryTable = (props) => {
+  const [revenue, setRevenue] = useState([]);
+  const { DataRevenue } = props;
+  const [tableData, setTableData] = useState(DataRevenue);
   const [orderBy, setOrderBy] = useState("");
   const [order, setOrder] = useState("asc");
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [searchTerm, setSearchTerm] = useState("");
   const [exportOpen, setexportOpen] = useState(false);
+  const [rowToDelete, setRowToDelete] = useState(null); // Store the ID of the row to delete
 
   useEffect(() => {
-    const apiUrl = "https://kuro.asrofur.me/sober/api/review/vendor/list";
+    const apiUrl =
+      "https://kuro.asrofur.me/sober/api/transaction/vendor/revenue";
     const bearerToken =
-      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYiLCJlbWFpbCI6InNvYmVyb2ZmaWNpYWxAZ21haWwuY29tIiwiaWF0IjoxNjk0NzYzMjQwLCJleHAiOjE2OTQ4NDk2NDB9.685_1ZkUcFetsS1WHcLhsGt9DFIlntloGDURLoXDjdk";
+      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYiLCJlbWFpbCI6InNvYmVyb2ZmaWNpYWxAZ21haWwuY29tIiwiaWF0IjoxNjk1MTkxMTE3LCJleHAiOjE2OTUyNzc1MTd9.peA0d3cJTNyelHP5EYlM_1eLXILz5BKFdjAciibRlWY";
 
     const fetchData = async () => {
       try {
@@ -41,10 +47,10 @@ const ReviewTable = () => {
             Authorization: `Bearer ${bearerToken}`,
           },
         });
-        setReview(response.data.data); // Fixed variable name here
+        setRevenue(response.data.data); // Fixed variable name here
 
         console.log("ttttttttttttttttttttttttt");
-        console.log(response.data.data);
+        console.log(response.data);
       } catch (error) {
         console.error("Error fetching data:", error);
       }
@@ -73,7 +79,7 @@ const ReviewTable = () => {
   };
 
   const sortedData = orderBy
-    ? [...review].sort((a, b) =>
+    ? [...revenue].sort((a, b) =>
         order === "asc"
           ? a[orderBy] < b[orderBy]
             ? -1
@@ -82,7 +88,7 @@ const ReviewTable = () => {
           ? -1
           : 1
       )
-    : review;
+    : revenue;
 
   const filteredData = sortedData.filter((row) =>
     Object.values(row).some((value) =>
@@ -99,6 +105,57 @@ const ReviewTable = () => {
     setPage(newPage);
   };
 
+  const headers = [
+    {
+      label: "id",
+      key: "id",
+    },
+    {
+      label: "Customer",
+      key: "customer",
+    },
+    ,
+    {
+      label: "Amount",
+      key: "amount",
+    },
+    {
+      label: "Shipping Amount",
+      key: "shipping_amount",
+    },
+    {
+      label: "Payment Method",
+      key: "payment_method",
+    },
+    {
+      label: "Created At",
+      key: "created_at",
+    },
+  ];
+  const DataSet = [
+    {
+      data: paginatedData.map((data) => ({
+        id: data?.id,
+        customer: data?.customer_order.name,
+        amount: data?.amount,
+        shipping_amount: data?.shipping_amount,
+        payment_method: data?.payment_order?.payment_channel,
+        created_at: data?.customer_order.created_at,
+      })),
+    },
+  ];
+
+  const csvLinkProps = {
+    filename: "Revenue.csv",
+    headers: headers,
+    data: DataSet[0].data, // Access the data property from DataSet
+  };
+  const handleExportToExcel = () => {
+    const ws = XLSX.utils.json_to_sheet(DataSet[0].data);
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, "Sheet1");
+    XLSX.writeFile(wb, "Revenue.xlsx");
+  };
   return (
     <Card className="mt-5 flex-wrap text-[12px]">
       <div className="p-2 flex flex-col md:flex-row justify-between">
@@ -125,13 +182,16 @@ const ReviewTable = () => {
             {exportOpen && (
               <div className="absolute w-[100px] text-black p-2 right-0 mt-2 border border-gray-300 rounded-lg">
                 <ul className="p">
-                  <li className="flex p-1 font-medium items-center border-b border-gray-400 mb-2 hover:bg-[#36C6D3] rounded-lg">
+                  <li className=" p-1 font-medium items-center hover:bg-[#36C6D3] rounded-lg ">
                     {" "}
-                    <FaFileCsv className="mr-1" /> Csv
+                    <CSVLink className="flex" {...csvLinkProps}>
+                      <FaFileCsv className="mr-1" />
+                      <p className="mt-[-2px]">Csv</p>
+                    </CSVLink>
                   </li>
-                  <li className="flex p-1 font-medium items-center hover:bg-[#36C6D3] rounded-lg ">
-                    {" "}
-                    <FaFileCsv className="mr-1" /> Csv
+                  <li className="flex cursor-pointer p-1 font-medium items-center hover:bg-[#36C6D3] rounded-lg ">
+                    <FaFileCsv className="mr-1" />
+                    <p onClick={handleExportToExcel}>Excel</p>
                   </li>
                 </ul>
               </div>
@@ -169,9 +229,9 @@ const ReviewTable = () => {
                   </TableCell>
 
                   <TableCell>
-                    <Button onClick={() => handleSort("product")}>
-                      product
-                      {orderBy === "product" ? (
+                    <Button onClick={() => handleSort("customer")}>
+                      Customer
+                      {orderBy === "customer" ? (
                         <span>
                           {order === "desc" ? (
                             <ArrowDownward />
@@ -183,9 +243,9 @@ const ReviewTable = () => {
                     </Button>
                   </TableCell>
                   <TableCell>
-                    <Button onClick={() => handleSort("user")}>
-                      user
-                      {orderBy === "user" ? (
+                    <Button onClick={() => handleSort("Amount")}>
+                      Amount
+                      {orderBy === "Amount" ? (
                         <span>
                           {order === "desc" ? (
                             <ArrowDownward />
@@ -197,9 +257,9 @@ const ReviewTable = () => {
                     </Button>
                   </TableCell>
                   <TableCell>
-                    <Button onClick={() => handleSort("star")}>
-                      star
-                      {orderBy === "star" ? (
+                    <Button onClick={() => handleSort("ShippingAmount")}>
+                      Shipping Amount
+                      {orderBy === "ShippingAmount" ? (
                         <span>
                           {order === "desc" ? (
                             <ArrowDownward />
@@ -211,23 +271,9 @@ const ReviewTable = () => {
                     </Button>
                   </TableCell>
                   <TableCell>
-                    <Button onClick={() => handleSort("comment")}>
-                      comment
-                      {orderBy === "comment" ? (
-                        <span>
-                          {order === "desc" ? (
-                            <ArrowDownward />
-                          ) : (
-                            <ArrowUpward />
-                          )}
-                        </span>
-                      ) : null}
-                    </Button>
-                  </TableCell>
-                  <TableCell>
-                    <Button onClick={() => handleSort("images")}>
-                      images
-                      {orderBy === "images" ? (
+                    <Button onClick={() => handleSort("PaymentMethod")}>
+                      Payment Method
+                      {orderBy === "PaymentMethod" ? (
                         <span>
                           {order === "desc" ? (
                             <ArrowDownward />
@@ -255,26 +301,22 @@ const ReviewTable = () => {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {paginatedData.map((review) => (
-                  <TableRow key={review.id}>
+                {paginatedData.map((revenue) => (
+                  <TableRow key={revenue.id}>
                     <TableCell className="whitespace-nowrap">
-                      {review.id}
+                      {revenue.id}
                     </TableCell>
-                    <TableCell>{review?.product?.name}</TableCell>
-                    <TableCell>{review?.customer?.name}</TableCell>
-                    <TableCell>{review?.star}</TableCell>
-                    <TableCell>{review?.comment}</TableCell>
+                    <TableCell>{revenue.customer_order.name}</TableCell>
+                    <TableCell>{revenue.amount}</TableCell>
+                    <TableCell>{revenue.shipping_amount}</TableCell>
                     <TableCell>
-                      <img
-                        className="h-20 w-20"
-                        src={
-                          "https://kuro.asrofur.me/sober/" +
-                          review?.product?.images
-                        }
-                        alt=""
-                      />
+                      {getPaymentMethod(
+                        revenue?.payment_order?.payment_channel
+                      )}
                     </TableCell>
-                    <TableCell>{formatDate(review?.created_at)}</TableCell>
+                    <TableCell>
+                      {formatDate(revenue.customer_order.created_at)}
+                    </TableCell>
                   </TableRow>
                 ))}
               </TableBody>
@@ -298,4 +340,4 @@ const ReviewTable = () => {
   );
 };
 
-export default ReviewTable;
+export default HistoryTable;

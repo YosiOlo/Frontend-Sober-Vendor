@@ -31,7 +31,7 @@ function YourComponent() {
   const [descriptionPayout, setDescriptionPayout] = useState("");
 
   return (
-    <div>
+    <div className="text-black">
       <div className="flex space-x-4">
         <button
           className={`${
@@ -60,23 +60,25 @@ function YourComponent() {
       </div>
 
       {activeTab === "general" && (
-        <div>
+        <div className="mt-4">
           <div className="space-y-2">
             <div className="flex space-x-4">
               <div className="w-1/2">
                 <label className="block font-medium">Shop Name</label>
                 <input
-                  className="border rounded px-3 py-2 w-full"
+                  className="border rounded px-3 py-2 w-full bg-white"
                   type="text"
                   value={shopName}
+                  placeholder="Shop Name"
                   onChange={(e) => setShopName(e.target.value)}
                 />
               </div>
               <div className="w-1/2">
                 <label className="block font-medium">Company Name</label>
                 <input
-                  className="border rounded px-3 py-2 w-full"
+                  className="border rounded px-3 py-2 w-full bg-white"
                   type="text"
+                  placeholder="Company Name"
                   value={companyName}
                   onChange={(e) => setCompanyName(e.target.value)}
                 />
@@ -85,9 +87,10 @@ function YourComponent() {
             <div>
               <label className="block font-medium">Phone Number</label>
               <input
-                className="border rounded px-3 py-2 w-full"
+                className="border rounded px-3 py-2 w-full bg-white"
                 type="text"
                 value={phoneNumber}
+                placeholder="Phone Number"
                 onChange={(e) => setPhoneNumber(e.target.value)}
               />
             </div>
@@ -95,18 +98,20 @@ function YourComponent() {
               <div className="w-1/2">
                 <label className="block font-medium">Email Toko</label>
                 <input
-                  className="border rounded px-3 py-2 w-full"
+                  className="border rounded px-3 py-2 w-full bg-white"
                   type="text"
                   value={email}
+                  placeholder="Email Toko"
                   onChange={(e) => setEmail(e.target.value)}
                 />
               </div>
               <div className="w-1/2">
                 <label className="block font-medium">Link Toko</label>
                 <input
-                  className="border rounded px-3 py-2 w-full"
+                  className="border rounded px-3 py-2 w-full bg-white"
                   type="text"
                   value={linkToko}
+                  placeholder="Link Toko"
                   onChange={(e) => setLinkToko(e.target.value)}
                 />
               </div>
@@ -115,17 +120,19 @@ function YourComponent() {
               <div className="w-1/2">
                 <label className="block font-medium">Alamat</label>
                 <input
-                  className="border rounded px-3 py-2 w-full"
+                  className="border rounded px-3 py-2 w-full bg-white"
                   type="text"
                   value={alamat}
+                  placeholder="Alamat"
                   onChange={(e) => seAlamat(e.target.value)}
                 />
               </div>
               <div className="w-1/2">
                 <label className="block font-medium">Zip Code</label>
                 <input
-                  className="border rounded px-3 py-2 w-full"
+                  className="border rounded px-3 py-2 w-full bg-white"
                   type="text"
+                  placeholder="Zip Code"
                   value={zipCode}
                   onChange={(e) => setzipCode(e.target.value)}
                 />
@@ -135,17 +142,19 @@ function YourComponent() {
               <div className="w-1/2">
                 <label className="block font-medium">Kelurahan</label>
                 <input
-                  className="border rounded px-3 py-2 w-full"
+                  className="border rounded px-3 py-2 w-full bg-white"
                   type="text"
                   value={kelurahan}
+                  placeholder="Kelurahan"
                   onChange={(e) => setKelurahan(e.target.value)}
                 />
               </div>
               <div className="w-1/2">
                 <label className="block font-medium">Kecamatan</label>
                 <input
-                  className="border rounded px-3 py-2 w-full"
+                  className="border rounded px-3 py-2 w-full bg-white"
                   type="text"
+                  placeholder="Kecamatan"
                   value={kecamatan}
                   onChange={(e) => setKecamatan(e.target.value)}
                 />
@@ -155,17 +164,19 @@ function YourComponent() {
               <div className="w-1/2">
                 <label className="block font-medium">Kota/Kabupaten</label>
                 <input
-                  className="border rounded px-3 py-2 w-full"
+                  className="border rounded px-3 py-2 w-full bg-white"
                   type="text"
                   value={kota}
+                  placeholder="Kota / Kabupaten"
                   onChange={(e) => setKota(e.target.value)}
                 />
               </div>
               <div className="w-1/2">
                 <label className="block font-medium">Provinsi</label>
                 <input
-                  className="border rounded px-3 py-2 w-full"
+                  className="border rounded px-3 py-2 w-full bg-white"
                   type="text"
+                  placeholder="Provinsi"
                   value={provinsi}
                   onChange={(e) => setProvinsi(e.target.value)}
                 />
@@ -174,16 +185,17 @@ function YourComponent() {
             <div>
               <label className="block font-medium">No KTP</label>
               <input
-                className="border rounded px-3 py-2 w-full"
+                className="border rounded px-3 py-2 w-full bg-white"
                 type="text"
                 value={noKtp}
+                placeholder="No KTP"
                 onChange={(e) => setNoKtp(e.target.value)}
               />
             </div>
             <div>
               <label className="block font-medium">Description</label>
               <input
-                className="border rounded h-[100px] px-3 py-2 w-full"
+                className="border rounded h-[100px] px-3 py-2 w-full bg-white"
                 type="text"
                 value={description}
                 placeholder="Description"
@@ -209,7 +221,7 @@ function YourComponent() {
             <div className="mt-4">
               <label className="block font-medium">Business Name</label>
               <input
-                className="border rounded px-3 py-2 w-full"
+                className="border rounded px-3 py-2 w-full bg-white"
                 type="text"
                 value={businessName}
                 placeholder="Business Name"
@@ -219,7 +231,7 @@ function YourComponent() {
             <div>
               <label className="block font-medium">Tax ID</label>
               <input
-                className="border rounded px-3 py-2 w-full"
+                className="border rounded px-3 py-2 w-full bg-white"
                 type="text"
                 value={taxId}
                 placeholder="Tax ID"
@@ -229,7 +241,7 @@ function YourComponent() {
             <div>
               <label className="block font-medium">Address</label>
               <input
-                className="border rounded px-3 py-2 w-full"
+                className="border rounded px-3 py-2 w-full bg-white"
                 type="text"
                 value={address}
                 placeholder="Address"
@@ -246,7 +258,7 @@ function YourComponent() {
             <div>
               <label className="block font-medium">Payment Method</label>
               <select
-                className="border rounded px-3 py-2 w-full"
+                className="border rounded px-3 py-2 w-full bg-white"
                 value={paymentMethod}
                 onChange={(e) => setPaymentMethod(e.target.value)}
               >
@@ -257,7 +269,7 @@ function YourComponent() {
             <div>
               <label className="block font-medium">Bank Name</label>
               <input
-                className="border rounded px-3 py-2 w-full"
+                className="border rounded px-3 py-2 w-full bg-white"
                 type="text"
                 value={bankName}
                 placeholder="Bank Name"
@@ -267,7 +279,7 @@ function YourComponent() {
             <div>
               <label className="block font-medium">Bank Code/IFSC</label>
               <input
-                className="border rounded px-3 py-2 w-full"
+                className="border rounded px-3 py-2 w-full bg-white"
                 type="text"
                 value={bankCode}
                 placeholder="Bank Code/IFSC"
@@ -277,7 +289,7 @@ function YourComponent() {
             <div>
               <label className="block font-medium">Account Number</label>
               <input
-                className="border rounded px-3 py-2 w-full"
+                className="border rounded px-3 py-2 w-full bg-white"
                 type="text"
                 value={accountNumber}
                 placeholder="Account Number"
@@ -287,7 +299,7 @@ function YourComponent() {
             <div>
               <label className="block font-medium">Account Holder Name</label>
               <input
-                className="border rounded px-3 py-2 w-full"
+                className="border rounded px-3 py-2 w-full bg-white"
                 type="text"
                 value={accountHolder}
                 placeholder="Account Holder Name"
@@ -297,7 +309,7 @@ function YourComponent() {
             <div>
               <label className="block font-medium">Bank Name</label>
               <input
-                className="border rounded px-3 py-2 w-full"
+                className="border rounded px-3 py-2 w-full bg-white"
                 type="text"
                 value={bankName}
                 placeholder="Bank Name"
@@ -307,7 +319,7 @@ function YourComponent() {
             <div>
               <label className="block font-medium">UPI ID</label>
               <input
-                className="border rounded px-3 py-2 w-full"
+                className="border rounded px-3 py-2 w-full bg-white"
                 type="text"
                 value={upiId}
                 placeholder="UPI ID"
@@ -317,7 +329,7 @@ function YourComponent() {
             <div>
               <label className="block font-medium">Description</label>
               <input
-                className="border rounded h-[100px] px-3 py-2 w-full"
+                className="border rounded h-[100px] px-3 py-2 w-full bg-white"
                 type="text"
                 value={descriptionPayout}
                 placeholder="Description"
