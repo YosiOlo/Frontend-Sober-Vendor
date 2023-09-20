@@ -19,6 +19,8 @@ import { TbFileExport, TbReload } from "react-icons/tb";
 import { FaFileCsv } from "react-icons/fa";
 import { ArrowUpward, ArrowDownward, Search } from "@mui/icons-material";
 import { formatDate } from "../../utils/api";
+import { CSVLink } from "react-csv";
+import * as XLSX from "xlsx";
 
 const WithdrawalsTable = () => {
   const [withdrawals, setWithdrawals] = useState([]);
@@ -172,6 +174,53 @@ const WithdrawalsTable = () => {
   const handleDeleteClick = (rowId) => {
     setRowToDelete(rowId); // Set ID baris yang akan dihapus saat tombol "Delete" pada baris diklik
   };
+  const headers = [
+    {
+      label: "id",
+      key: "id",
+    },
+    {
+      label: "Amount",
+      key: "amount",
+    },
+    {
+      label: "Current Balance",
+      key: "current_balance",
+    },
+    
+    {
+      label: "Status",
+      key: "status",
+    },
+    {
+      label: "Created At",
+      key: "created_at",
+    },
+  ];
+  
+  const DataSet = [
+    {
+      data: paginatedData.map((data) => ({
+        id: data?.id,
+        customer: data?.amount,
+        amount: data?.current_balance,
+        shipping_amount: data?.status,
+        payment_method: data?.created_at,
+      })),
+    },
+  ];
+
+  const csvLinkProps = {
+    filename: "Withdrawals.csv",
+    headers: headers,
+    data: DataSet[0].data, // Access the data property from DataSet
+  };
+  const handleExportToExcel = () => {
+    const ws = XLSX.utils.json_to_sheet(DataSet[0].data);
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, "Sheet1");
+    XLSX.writeFile(wb, "Withdrawals.xlsx");
+  };
 
   return (
     <Card className="mt-5 w-full text-[10px]">
@@ -188,7 +237,7 @@ const WithdrawalsTable = () => {
           }}
         />
         <div className="action flex flex-col md:flex-row space-x-0 md:space-x-3 font-semibold text-[12px] ">
-          <div className="relative">
+        <div className="relative">
             <button
               className="flex px-4 py-2 bg-[#36C6D3] rounded-lg"
               onClick={toggleExport}
@@ -199,13 +248,16 @@ const WithdrawalsTable = () => {
             {exportOpen && (
               <div className="absolute w-[100px] text-black p-2 right-0 mt-2 border border-gray-300 rounded-lg">
                 <ul className="p">
-                  <li className="flex p-1 font-medium items-center border-b border-gray-400 mb-2 hover:bg-[#36C6D3] rounded-lg">
+                  <li className=" p-1 font-medium items-center hover:bg-[#36C6D3] rounded-lg ">
                     {" "}
-                    <FaFileCsv className="mr-1" /> Csv
+                    <CSVLink className="flex" {...csvLinkProps}>
+                      <FaFileCsv className="mr-1" />
+                      <p className="mt-[-2px]">Csv</p>
+                    </CSVLink>
                   </li>
-                  <li className="flex p-1 font-medium items-center hover:bg-[#36C6D3] rounded-lg ">
-                    {" "}
-                    <FaFileCsv className="mr-1" /> Csv
+                  <li className="flex cursor-pointer p-1 font-medium items-center hover:bg-[#36C6D3] rounded-lg ">
+                    <FaFileCsv className="mr-1" />
+                    <p onClick={handleExportToExcel}>Excel</p>
                   </li>
                 </ul>
               </div>

@@ -34,7 +34,7 @@ const TableCoupons = () => {
   useEffect(() => {
     const apiUrl = "https://kuro.asrofur.me/sober/api/discount/vendor/list/";
     const bearerToken =
-      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYiLCJlbWFpbCI6InNvYmVyb2ZmaWNpYWxAZ21haWwuY29tIiwiaWF0IjoxNjk0NzYzMjQwLCJleHAiOjE2OTQ4NDk2NDB9.685_1ZkUcFetsS1WHcLhsGt9DFIlntloGDURLoXDjdk";
+      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYiLCJlbWFpbCI6InNvYmVyb2ZmaWNpYWxAZ21haWwuY29tIiwiaWF0IjoxNjk1MTkxMTE3LCJleHAiOjE2OTUyNzc1MTd9.peA0d3cJTNyelHP5EYlM_1eLXILz5BKFdjAciibRlWY";
 
     const fetchData = async () => {
       try {
@@ -170,29 +170,6 @@ const TableCoupons = () => {
           }}
         />
         <div className="action flex flex-col sm:w-[100%] text-white md:flex-row space-x-0 md:space-x-3 font-semibold text-[12px] ">
-          <div className="relative">
-            <button
-              className="flex px-4 py-2 bg-[#36C6D3] rounded-lg"
-              onClick={toggleExport}
-            >
-              <TbFileExport className="mr-1 mt-[2px] bg-[#36C6D3]" />
-              Export <MdOutlineArrowDropDown className="bg-[#36C6D3]" />
-            </button>
-            {exportOpen && (
-              <div className="absolute w-[100px] text-black p-2 right-0 mt-2 border border-gray-300 rounded-lg">
-                <ul className="p">
-                  <li className="flex p-1 font-medium items-center border-b border-gray-400 mb-2 hover:bg-[#36C6D3] rounded-lg">
-                    {" "}
-                    <FaFileCsv className="mr-1" /> Csv
-                  </li>
-                  <li className="flex p-1 font-medium items-center hover:bg-[#36C6D3] rounded-md ">
-                    {" "}
-                    <FaFileCsv className="mr-1" /> Csv
-                  </li>
-                </ul>
-              </div>
-            )}
-          </div>
           <button className="bg-[#36C6D3] flex justify-between p-2 h-[2.5rem] w-full md:w-[6rem] rounded-md mt-2 md:mt-0">
             <TbReload className="  text-lg" />
             Reload

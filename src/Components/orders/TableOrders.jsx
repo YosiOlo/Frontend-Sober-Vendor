@@ -20,6 +20,7 @@ import { FaFileCsv } from "react-icons/fa";
 import { ArrowUpward, ArrowDownward, Search } from "@mui/icons-material";
 import axios from "axios";
 import { formatDate } from "../../utils/api";
+import * as XLSX from "xlsx";
 
 const TableOrders = () => {
   const [orderBy, setOrderBy] = useState("id");
@@ -36,7 +37,7 @@ const TableOrders = () => {
     const apiUrl =
       "https://kuro.asrofur.me/sober/api/transaction/vendor?limit=30";
     const bearerToken =
-      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYiLCJlbWFpbCI6InNvYmVyb2ZmaWNpYWxAZ21haWwuY29tIiwiaWF0IjoxNjk0NzYzMjQwLCJleHAiOjE2OTQ4NDk2NDB9.685_1ZkUcFetsS1WHcLhsGt9DFIlntloGDURLoXDjdk";
+      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYiLCJlbWFpbCI6InNvYmVyb2ZmaWNpYWxAZ21haWwuY29tIiwiaWF0IjoxNjk1MTkxMTE3LCJleHAiOjE2OTUyNzc1MTd9.peA0d3cJTNyelHP5EYlM_1eLXILz5BKFdjAciibRlWY";
 
     const fetchData = async () => {
       try {
@@ -215,6 +216,12 @@ const TableOrders = () => {
     headers: headers,
     data: DataSet[0].data, // Access the data property from DataSet
   };
+  const handleExportToExcel = () => {
+    const ws = XLSX.utils.json_to_sheet(DataSet[0].data);
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, "Sheet1");
+    XLSX.writeFile(wb, "Orders.xlsx");
+  };
 
   const confirmDelete = async () => {
     if (rowToDelete !== null) {
@@ -227,7 +234,7 @@ const TableOrders = () => {
     try {
       const apiUrl = `https://kuro.asrofur.me/sober/api/transaction/vendor/${rowId}`;
       const bearerToken =
-        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYiLCJlbWFpbCI6InNvYmVyb2ZmaWNpYWxAZ21haWwuY29tIiwiaWF0IjoxNjk0NzYzMjQwLCJleHAiOjE2OTQ4NDk2NDB9.685_1ZkUcFetsS1WHcLhsGt9DFIlntloGDURLoXDjdk";
+        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYiLCJlbWFpbCI6InNvYmVyb2ZmaWNpYWxAZ21haWwuY29tIiwiaWF0IjoxNjk1MTkxMTE3LCJleHAiOjE2OTUyNzc1MTd9.peA0d3cJTNyelHP5EYlM_1eLXILz5BKFdjAciibRlWY";
 
       const response = await axios.delete(apiUrl, {
         headers: {
@@ -287,15 +294,16 @@ const TableOrders = () => {
             {exportOpen && (
               <div className="absolute w-[100px] text-black p-2 right-0 mt-2 border border-gray-300 rounded-lg">
                 <ul className="p">
-                  <li className="flex p-1 font-medium items-center hover:bg-[#36C6D3] rounded-lg ">
+                  <li className=" p-1 font-medium items-center hover:bg-[#36C6D3] rounded-lg ">
                     {" "}
-                    <CSVLink {...csvLinkProps}>
-                      <FaFileCsv className="mr-1" /> Csv
+                    <CSVLink className="flex" {...csvLinkProps}>
+                      <FaFileCsv className="mr-1" />
+                      <p className="mt-[-2px]">Csv</p>
                     </CSVLink>
                   </li>
-                  <li className="flex p-1 font-medium items-center hover:bg-[#36C6D3] rounded-lg ">
-                    {" "}
-                    <FaFileCsv className="mr-1" /> Csv
+                  <li className="flex cursor-pointer p-1 font-medium items-center hover:bg-[#36C6D3] rounded-lg ">
+                    <FaFileCsv className="mr-1" />
+                    <p onClick={handleExportToExcel}>Excel</p>
                   </li>
                 </ul>
               </div>

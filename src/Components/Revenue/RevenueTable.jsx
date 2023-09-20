@@ -15,6 +15,8 @@ import {
   TablePagination,
   TextField,
 } from "@mui/material";
+import { CSVLink } from "react-csv";
+import * as XLSX from "xlsx";
 import { MdOutlineArrowDropDown, MdEdit, MdDelete } from "react-icons/md";
 import { TbFileExport, TbReload } from "react-icons/tb";
 import { FaFileCsv } from "react-icons/fa";
@@ -36,7 +38,7 @@ const RevenueTable = (props) => {
     const apiUrl =
       "https://kuro.asrofur.me/sober/api/transaction/vendor/revenue";
     const bearerToken =
-      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYiLCJlbWFpbCI6InNvYmVyb2ZmaWNpYWxAZ21haWwuY29tIiwiaWF0IjoxNjk0NzYzMjQwLCJleHAiOjE2OTQ4NDk2NDB9.685_1ZkUcFetsS1WHcLhsGt9DFIlntloGDURLoXDjdk";
+      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYiLCJlbWFpbCI6InNvYmVyb2ZmaWNpYWxAZ21haWwuY29tIiwiaWF0IjoxNjk1MTkxMTE3LCJleHAiOjE2OTUyNzc1MTd9.peA0d3cJTNyelHP5EYlM_1eLXILz5BKFdjAciibRlWY";
 
     const fetchData = async () => {
       try {
@@ -103,6 +105,57 @@ const RevenueTable = (props) => {
     setPage(newPage);
   };
 
+  const headers = [
+    {
+      label: "id",
+      key: "id",
+    },
+    {
+      label: "Customer",
+      key: "customer",
+    },
+    ,
+    {
+      label: "Amount",
+      key: "amount",
+    },
+    {
+      label: "Shipping Amount",
+      key: "shipping_amount",
+    },
+    {
+      label: "Payment Method",
+      key: "payment_method",
+    },
+    {
+      label: "Created At",
+      key: "created_at",
+    },
+  ];
+  const DataSet = [
+    {
+      data: paginatedData.map((data) => ({
+        id: data?.id,
+        customer: data?.customer_order.name,
+        amount: data?.amount,
+        shipping_amount: data?.shipping_amount,
+        payment_method: data?.payment_order?.payment_channel,
+        created_at: data?.customer_order.created_at,
+      })),
+    },
+  ];
+
+  const csvLinkProps = {
+    filename: "Revenue.csv",
+    headers: headers,
+    data: DataSet[0].data, // Access the data property from DataSet
+  };
+  const handleExportToExcel = () => {
+    const ws = XLSX.utils.json_to_sheet(DataSet[0].data);
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, "Sheet1");
+    XLSX.writeFile(wb, "Revenue.xlsx");
+  };
   return (
     <Card className="mt-5 flex-wrap text-[12px]">
       <div className="p-2 flex flex-col md:flex-row justify-between">
@@ -129,13 +182,16 @@ const RevenueTable = (props) => {
             {exportOpen && (
               <div className="absolute w-[100px] text-black p-2 right-0 mt-2 border border-gray-300 rounded-lg">
                 <ul className="p">
-                  <li className="flex p-1 font-medium items-center border-b border-gray-400 mb-2 hover:bg-[#36C6D3] rounded-lg">
+                  <li className=" p-1 font-medium items-center hover:bg-[#36C6D3] rounded-lg ">
                     {" "}
-                    <FaFileCsv className="mr-1" /> Csv
+                    <CSVLink className="flex" {...csvLinkProps}>
+                      <FaFileCsv className="mr-1" />
+                      <p className="mt-[-2px]">Csv</p>
+                    </CSVLink>
                   </li>
-                  <li className="flex p-1 font-medium items-center hover:bg-[#36C6D3] rounded-lg ">
-                    {" "}
-                    <FaFileCsv className="mr-1" /> Csv
+                  <li className="flex cursor-pointer p-1 font-medium items-center hover:bg-[#36C6D3] rounded-lg ">
+                    <FaFileCsv className="mr-1" />
+                    <p onClick={handleExportToExcel}>Excel</p>
                   </li>
                 </ul>
               </div>
