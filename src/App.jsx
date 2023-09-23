@@ -13,6 +13,8 @@ import WithdrawalsPage from "./pages/WIthdrawalsPage";
 import SettingsPage from "./pages/SettingsPage";
 import AddProductIndex from "./Components/Products/AddProducts/AddProductIndex";
 import AddCouponsIndex from "./Components/Coupons/AddCoupons/AddCouponsIndex";
+import HistoryTable from "./Components/Revenue/historyChart/HistoryTable";
+import HistoryIndex from "./Components/Revenue/historyChart/HistoryIndex";
 
 const App = () => {
   return (
@@ -31,6 +33,7 @@ const App = () => {
         <Route path="/VenSettings" element={<SettingsPage />} />
         <Route path="/VenCreateProduct" element={<AddProductIndex />} />
         <Route path="/VenCreateCoupons" element={<AddCouponsIndex />} />
+        <Route path="/historyRevenue" element={<HistoryIndex/>}/>
       </Routes>
     </RootLayout>
   );

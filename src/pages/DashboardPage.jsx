@@ -5,6 +5,7 @@ import ChartTwo from "../Components/Dashboard/Chart/ChartTwo";
 import Statistic from "../Components/Dashboard/Statistic";
 import TableDashboard from "../Components/Dashboard/TableDashboard";
 import { recentOrders } from "../utils/data";
+import NewOrders from "../Components/Dashboard/NewOrder";
 
 function DashboardPage() {
   const data= recentOrders();
@@ -16,8 +17,9 @@ function DashboardPage() {
       <ChartTwo/>
       <Statistic/>
       </div>
-      <div className="card p-4 text-[12px]">
-          <TableDashboard  DataDashboard ={data}/>
+      <div className="card p-6 text-[12px]">
+      <h1 className="font-bold text-black">New Orders</h1>
+          <NewOrders/>
           
         </div>
     </div>

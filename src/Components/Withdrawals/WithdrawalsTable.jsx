@@ -32,28 +32,7 @@ const WithdrawalsTable = () => {
   const [exportOpen, setexportOpen] = useState(false);
   const [rowToDelete, setRowToDelete] = useState(null); // Store the ID of the row to delete
 
-  useEffect(() => {
-    const apiUrl =
-      "https://kuro.asrofur.me/sober/api/transaction/vendor/withdrawal";
-    const bearerToken =
-      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYiLCJlbWFpbCI6InNvYmVyb2ZmaWNpYWxAZ21haWwuY29tIiwiaWF0IjoxNjk1MjAxNzAyLCJleHAiOjE2OTUyODgxMDJ9.oeG-oqJKB_S129De77IkMazDg5LNHLbaUwqmYcmtn0c";
 
-    const fetchData = async () => {
-      try {
-        const response = await axios.get(apiUrl, {
-          headers: {
-            Authorization: `Bearer ${bearerToken}`,
-          },
-        });
-        setWithdrawals(response.data.data.rows); // Fixed variable name here
-        console.log("ttttttttttttttttttttttttt");
-        console.log(response.data.data.rows);
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      }
-    };
-    fetchData();
-  }, []);
 
   const toggleExport = () => {
     setexportOpen(!exportOpen);

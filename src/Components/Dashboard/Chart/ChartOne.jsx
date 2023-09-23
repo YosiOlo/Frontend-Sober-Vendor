@@ -1,5 +1,6 @@
 import { dataBar } from '../../../utils/data'
 import React, { PureComponent } from 'react';
+import { Link } from 'react-router-dom';
 import {
   LineChart,
   Line,
@@ -13,6 +14,7 @@ import {
   Area,
   ResponsiveContainer,
 } from 'recharts';
+import {TbPlayerTrackNextFilled} from "react-icons/tb"
 
 const data = [
   {
@@ -54,12 +56,11 @@ function Barchart() {
     const data= dataBar();
   return (
   <div className="card p-4 w-[40%]">
-  <div className="header ml-10">
+  <div className="header ml-10 mb-7">
     <h2 className="font-bold">Sales Reports</h2>
     <p className=" flex text-[12px] font-medium text-blue-400">
-      Revenues in Last 30 days{" "}
-      <MdNavigateNext className="mt-1 text-blue-400" />
-      <MdNavigateNext className="mt-1 ml-[-8px] text-blue-400" />
+      <Link className='flex gap-1' to={"/historyRevenue"}>Pendapatan dalam Last 30 days <TbPlayerTrackNextFilled className='mt-1'/>
+      </Link>
     </p>
   </div>
   <div className="flex ">

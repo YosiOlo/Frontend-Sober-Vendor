@@ -1,6 +1,6 @@
 import React from 'react';
 import TopBar from '../Components/TopBar/TopBar';
-import YourComponent from '../Components/tes';
+import YourComponent from '../Components/Settings/tes';
 
 function SettingsPage() {
   return (

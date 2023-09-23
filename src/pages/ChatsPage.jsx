@@ -1,14 +1,9 @@
-import React from "react";
-import TopBar from "../Components/TopBar/TopBar"
-import InputForm from "../Components/Products/AddProducts/InputForm";
+import React from 'react'
 
 function ChatsPage() {
   return (
-    <div className="text-black">
-      <TopBar title="Chats" />
-      <InputForm/>
-      </div>
-  );
+    <div>ChatsPage</div>
+  )
 }
 
-export default ChatsPage;
+export default ChatsPage

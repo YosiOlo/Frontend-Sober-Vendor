@@ -1,8 +1,8 @@
 import React from "react";
 import { PieChart, Pie, Sector, Cell, ResponsiveContainer } from "recharts";
 
-import { MdNavigateNext,MdOutlineAccountBalanceWallet } from "react-icons/md";
-
+import { MdOutlineAccountBalanceWallet } from "react-icons/md";
+import {TbPlayerTrackNextFilled} from "react-icons/tb"
 
 const data = [
   { name: "Pendapatan", value: 300 },
@@ -42,12 +42,10 @@ const renderCustomizedLabel = ({
 function ChartTwo() {
   return (
     <div className="card p-4">
-      <div className="header ml-10">
+      <div className="header ml-10 mb-7">
         <h2 className="font-bold">Earnings</h2>
-        <p className=" flex text-[12px] font-medium text-blue-400">
-          Revenues in Last 30 days{" "}
-          <MdNavigateNext className="mt-1 text-blue-400" />
-          <MdNavigateNext className="mt-1 ml-[-8px] text-blue-400" />
+        <p className=" flex gap-1 text-[12px] font-medium text-blue-400">
+          Revenues in Last 30 days{" "}<TbPlayerTrackNextFilled className='mt-1'/>
         </p>
       </div>
       <div className="">

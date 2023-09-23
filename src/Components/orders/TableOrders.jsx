@@ -18,7 +18,7 @@ import "jspdf-autotable";
 
 import { CSVLink } from "react-csv";
 import * as XLSX from "xlsx";
-import {AiTwotoneReconciliation} from "react-icons/ai"
+import { AiTwotoneReconciliation } from "react-icons/ai";
 import { MdOutlineArrowDropDown, MdEdit, MdDelete } from "react-icons/md";
 import { TbFileExport, TbReload } from "react-icons/tb";
 import { FaFileCsv } from "react-icons/fa";
@@ -41,7 +41,7 @@ const TableOrders = () => {
     const apiUrl =
       "https://kuro.asrofur.me/sober/api/transaction/vendor?limit=30";
     const bearerToken =
-      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYiLCJlbWFpbCI6InNvYmVyb2ZmaWNpYWxAZ21haWwuY29tIiwiaWF0IjoxNjk1MTkxMTE3LCJleHAiOjE2OTUyNzc1MTd9.peA0d3cJTNyelHP5EYlM_1eLXILz5BKFdjAciibRlWY";
+      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYiLCJlbWFpbCI6InNvYmVyb2ZmaWNpYWxAZ21haWwuY29tIiwiaWF0IjoxNjk1Mjc4MDQ0LCJleHAiOjE2OTUzNjQ0NDR9.gTdleJdGE7IVNxnBzOvBGZGWg50yAB1pTbfOsLXF_7s";
 
     const fetchData = async () => {
       try {
@@ -55,7 +55,6 @@ const TableOrders = () => {
         setTransactions(response?.data.data.rows);
         // console.log("ttttttttttttttttttttttttt");
         // console.log(response.data.data.rows);
-        console.log(paginatedData);
       } catch (error) {
         console.error("Error fetching data:", error);
       }
@@ -230,7 +229,7 @@ const TableOrders = () => {
 
   const handleExportToPDF = () => {
     const doc = new jsPDF();
-  
+
     // Define columns for the table
     const columns = [
       { title: "ID", dataKey: "id" },
@@ -242,35 +241,31 @@ const TableOrders = () => {
       { title: "Status", dataKey: "status" },
       { title: "Created At", dataKey: "created_at" },
     ];
-  
+
     // Define rows for the table
     const rows = paginatedData.map((transaction) => ({
       id: transaction?.id,
       customer: transaction?.order_addresses?.name,
       amount: transaction?.amount,
       shipping_amount: transaction?.shipping_amount,
-      payment_channel: 
-        transaction?.payment_order?.payment_channel
-      ,
+      payment_channel: transaction?.payment_order?.payment_channel,
       payment_status: transaction?.payment_order?.status,
       status: transaction?.status,
       created_at: formatDate(transaction?.payment_order?.created_at),
     }));
-  
+
     // Convert rows into a format compatible with autoTable
     const tableRows = rows.map((row) => Object.values(row));
-  
+
     doc.autoTable({
-      
       head: [columns.map((column) => column.title)],
       body: tableRows,
       startY: 20, // Start the table 20 units from the top
     });
-  
+
     // Save the PDF with a specific filename
     doc.save("Orders.pdf");
   };
-  
 
   const confirmDelete = async () => {
     if (rowToDelete !== null) {
@@ -283,7 +278,7 @@ const TableOrders = () => {
     try {
       const apiUrl = `https://kuro.asrofur.me/sober/api/transaction/vendor/${rowId}`;
       const bearerToken =
-        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYiLCJlbWFpbCI6InNvYmVyb2ZmaWNpYWxAZ21haWwuY29tIiwiaWF0IjoxNjk1MTkxMTE3LCJleHAiOjE2OTUyNzc1MTd9.peA0d3cJTNyelHP5EYlM_1eLXILz5BKFdjAciibRlWY";
+        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYiLCJlbWFpbCI6InNvYmVyb2ZmaWNpYWxAZ21haWwuY29tIiwiaWF0IjoxNjk1Mjc4MDQ0LCJleHAiOjE2OTUzNjQ0NDR9.gTdleJdGE7IVNxnBzOvBGZGWg50yAB1pTbfOsLXF_7s";
 
       const response = await axios.delete(apiUrl, {
         headers: {
